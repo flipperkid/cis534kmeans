@@ -1,0 +1,1 @@
+g++ -o Kmeans_demo kmeans.cpp Kmeans_demo.cpp -Iopencv/include/opencv -Lopencv/lib64 -lcv -lcvaux -lcxcore -lhighgui -lml

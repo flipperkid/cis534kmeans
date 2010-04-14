@@ -1,0 +1,2 @@
+export LD_LIBRARY_PATH=opencv/lib64
+./Kmeans_demo beach.png
