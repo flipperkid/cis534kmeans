@@ -3,7 +3,7 @@
 int kmeans_serial(uchar *particle_data, int particle_count, int dimensions, int cluster_count, uchar *assignments) {
     reset_timer();
     start_timer();
-    srand( time(NULL) );
+//    srand( time(NULL) );
 
     // assign centers
     double *centers = new double[cluster_count*dimensions];

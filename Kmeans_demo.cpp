@@ -30,7 +30,7 @@ int main(int argc, char **argv) {
     uchar *data = (uchar *)hsvImg->imageData;
     
     // call to kmeans framework
-    int cluster_count = 25;
+    int cluster_count = 10;
     uchar *assignments = new uchar[particle_count];
     kmeans_serial(data, particle_count, channels, cluster_count, assignments);
 
