@@ -6,14 +6,22 @@
 #include <iostream>
 #include <math.h>
 #include <time.h>
-#include <limits.h>
+#include <limits>
 
 #define uchar unsigned char
+
+template <typename T> 
+inline T &array_access(T *arr, int main_iter, int sub_iter, int sub_count)
+{
+    return arr[main_iter*sub_count+sub_iter];
+}
+
 int kmeans_serial(uchar *data, int particle_count, int dimensions, int cluster_count, uchar *assignments);
 
 int select_centers_serial(uchar *data, int particle_count, int dimensions, int cluster_count, double *centers);
+int select_centerspp_serial(uchar *data, int particle_count, int dimensions, int cluster_count, double *centers);
 
-int compute_distance(uchar *particle_data, int particle_iter, double *centers, int center_iter, int dimensions);
+double compute_distance(uchar *particle_data, int particle_iter, double *centers, int center_iter, int dimensions);
 
 #endif
 
