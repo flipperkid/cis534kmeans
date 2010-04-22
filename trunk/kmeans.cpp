@@ -48,8 +48,10 @@ int kmeans_serial(uchar *particle_data, int particle_count, int dimensions, int 
         if (assignment_change) {
 
             // initialize centers to 0
-            for (int center_arr_iter = 0; center_arr_iter < cluster_count*dimensions; center_arr_iter++) {
-                centers[center_arr_iter] = 0;
+            for (int cluster_iter = 0; cluster_iter < cluster_count; cluster_iter++) {
+                for (int dim_iter = 0; dim_iter < dimensions; dim_iter++) {
+                    array_access<double>(centers, cluster_iter, dim_iter, dimensions) = 0;
+                }
             }
             for (int cluster_iter = 0; cluster_iter < cluster_count; cluster_iter++) {
                 cluster_sizes[cluster_iter] = 0;

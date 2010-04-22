@@ -48,6 +48,7 @@ int main(int argc, char **argv) {
 
     // release memory
     delete [] assignments; 
+    cvReleaseImage(&hsvImg );
     cvReleaseImage(&img );
     return 0;
 }
