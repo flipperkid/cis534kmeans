@@ -7,6 +7,7 @@
 #include <math.h>
 #include <time.h>
 #include <limits>
+#include "timer.h"
 
 #define uchar unsigned char
 
