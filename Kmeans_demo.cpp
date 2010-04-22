@@ -30,18 +30,9 @@ int main(int argc, char **argv) {
     uchar *data = (uchar *)hsvImg->imageData;
     
     // call to kmeans framework
-    int cluster_count = 10;
+    int cluster_count = 25;
     uchar *assignments = new uchar[particle_count];
     kmeans_serial(data, particle_count, channels, cluster_count, assignments);
-
-    int min_assn = 100;
-    int max_assn = -1;
-    for (int i = 0; i < particle_count; i++) {
-        if((int)assignments[i] < min_assn)
-            min_assn = (int)assignments[i];
-        if((int)assignments[i] > max_assn)
-            max_assn = (int)assignments[i];
-    }
 
     IplImage *outImg = cvCreateImage( cvGetSize(img), 8, 1 );
     output_assignments(outImg, assignments, cluster_count, particle_count);
