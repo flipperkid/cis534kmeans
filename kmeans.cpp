@@ -134,7 +134,7 @@ int select_centerspp_serial(uchar *particle_data, int particle_count, int dimens
     return 0;
 }
 
-double compute_distance(uchar *particle_data, int particle_iter, double *centers, int center_iter, int dimensions) {
+double compute_distance(uchar *particle_data, const int particle_iter, double *centers, const int center_iter, const int dimensions) {
     double dist = 0;
     for (int dim_iter = 0; dim_iter < dimensions; dim_iter++) {
         dist += pow( (double)array_access<uchar>(particle_data, particle_iter, dim_iter, dimensions) - array_access<double>(centers, center_iter, dim_iter, dimensions), 2 );

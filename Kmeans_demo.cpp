@@ -4,6 +4,7 @@
 #include <cv.h>
 #include <highgui.h>
 #include "kmeans.h"
+#include "kmeanstbb.h"
 
 int output_assignments(IplImage *img, uchar *assignments, int cluster_count, int particle_count);
 
@@ -32,7 +33,8 @@ int main(int argc, char **argv) {
     // call to kmeans framework
     int cluster_count = 10;
     uchar *assignments = new uchar[particle_count];
-    kmeans_serial(data, particle_count, channels, cluster_count, assignments);
+//    kmeans_serial(data, particle_count, channels, cluster_count, assignments);
+    kmeans_tbb(data, particle_count, channels, cluster_count, assignments);
 
     IplImage *outImg = cvCreateImage( cvGetSize(img), 8, 1 );
     output_assignments(outImg, assignments, cluster_count, particle_count);
