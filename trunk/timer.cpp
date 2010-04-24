@@ -15,7 +15,7 @@ double get_seconds() {
 
 void reset_timer( ) { 
     running = false;
-    start= get_seconds;
+    start = get_seconds();
     secs = 0.0f; 
 }
 
@@ -27,13 +27,13 @@ void start_timer( ) {
 void stop_timer( ) {
     if( running ) {
         running = false;
-        secs += get_seconds - start;
+        secs += get_seconds() - start;
     }
 }
 
 double get_time_elapsed( ) {
     if( running ) {
-        return secs + get_seconds - start;
+        return secs + get_seconds() - start;
     }
     return secs;
 }
