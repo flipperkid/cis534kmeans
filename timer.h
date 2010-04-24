@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <time.h>
 
+double get_seconds();
 void reset_timer( );
 void start_timer( );
 void stop_timer( );

@@ -1,12 +1,21 @@
 #include "timer.h"
 
 double secs = 0.0f;
-time_t start;
+double start;
 bool running = false;
+
+double get_seconds() {
+    struct timespec ts;
+    clock_gettime(CLOCK_REALTIME, &ts);
+    double tv_sec = double(ts.tv_sec);
+    double tv_nsec = double(ts.tv_nsec);
+    double seconds = tv_sec + (tv_nsec / double(1000000000.0));
+    return seconds;
+}
 
 void reset_timer( ) { 
     running = false;
-    start= time(NULL);
+    start= get_seconds;
     secs = 0.0f; 
 }
 
@@ -18,13 +27,13 @@ void start_timer( ) {
 void stop_timer( ) {
     if( running ) {
         running = false;
-        secs += difftime(time(NULL),start);
+        secs += get_seconds - start;
     }
 }
 
 double get_time_elapsed( ) {
     if( running ) {
-        return secs + difftime(time(NULL), start);
+        return secs + get_seconds - start;
     }
     return secs;
 }
