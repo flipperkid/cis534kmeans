@@ -32,7 +32,7 @@ int main(int argc, char **argv) {
     uchar *data = (uchar *)hsvImg->imageData;
     
     // call to kmeans framework
-    int cluster_count = 100;
+    int cluster_count = 50;
     uchar *assignments = new uchar[particle_count];
 //    kmeans_serial(data, particle_count, channels, cluster_count, assignments);
     kmeans_tbb( data, particle_count, channels, cluster_count, assignments, grainsize );
