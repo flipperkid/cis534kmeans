@@ -10,7 +10,7 @@ int output_assignments(IplImage *img, uchar *assignments, int cluster_count, int
 
 int main(int argc, char **argv) {
     if (argc<2) {
-        printf("Usage: main grainsize\n\");
+        printf("Usage: main grainsize\n\7");
         exit(0);
     }
     int grainsize = atoi(argv[1]);
