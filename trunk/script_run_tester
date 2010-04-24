@@ -1,2 +1,9 @@
 export LD_LIBRARY_PATH=opencv/lib64:~cis534/public/tbb/build/linux_intel64_gcc_cc4.3.2_libc2.9_kernel2.6.27.29_release:$LD_LIBRARY_PATH
-./Kmeans_demo 10000
+qsub -m a -M flipperkid@gmail.com -cwd -b y -j y -q core2-quad.q -pe threaded 4 ./Kmeans_tester 1
+qsub -m a -M flipperkid@gmail.com -cwd -b y -j y -q core2-quad.q -pe threaded 4 ./Kmeans_tester 10
+qsub -m a -M flipperkid@gmail.com -cwd -b y -j y -q core2-quad.q -pe threaded 4 ./Kmeans_tester 100
+qsub -m a -M flipperkid@gmail.com -cwd -b y -j y -q core2-quad.q -pe threaded 4 ./Kmeans_tester 1000
+qsub -m a -M flipperkid@gmail.com -cwd -b y -j y -q core2-quad.q -pe threaded 4 ./Kmeans_tester 10000
+qsub -m a -M flipperkid@gmail.com -cwd -b y -j y -q core2-quad.q -pe threaded 4 ./Kmeans_tester 100000
+qsub -m a -M flipperkid@gmail.com -cwd -b y -j y -q core2-quad.q -pe threaded 4 ./Kmeans_tester 1000000
+qsub -m a -M flipperkid@gmail.com -cwd -b y -j y -q core2-quad.q -pe threaded 4 ./Kmeans_tester 10000000
