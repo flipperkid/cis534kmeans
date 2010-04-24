@@ -16,7 +16,7 @@ int main(int argc, char **argv) {
     int grainsize = atoi(argv[1]);
 
     // load an image  
-    IplImage *img=cvLoadImage("beach.png");
+    IplImage *img=cvLoadImage("portomoniz.jpg");
     if (!img){
         printf("Could not load image file beach.png\n");
         exit(0);
