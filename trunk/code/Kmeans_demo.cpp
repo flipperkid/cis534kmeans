@@ -56,4 +56,6 @@ int output_assignments(IplImage *img, uchar *assignments, int cluster_count, int
     if (!cvSaveImage(outFileName,img)) {
         printf("Could not save: %s\n",outFileName);
     }
+
+    return 0;
 }

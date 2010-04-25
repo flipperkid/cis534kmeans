@@ -70,10 +70,12 @@ int kmeans_serial(uchar *particle_data, int particle_count, int dimensions, int 
             // divide by number of assigned particles to get mean
             for (int cluster_iter = 0; cluster_iter < cluster_count; cluster_iter++) {
                 for (int dim_iter = 0; dim_iter < dimensions; dim_iter++) {
-                    array_access<double>(centers, cluster_iter, dim_iter, dimensions) = floor(array_access<double>(centers, cluster_iter, dim_iter, dimensions)/cluster_sizes[cluster_iter] + 0.5);
+                    array_access<double>(centers, cluster_iter, dim_iter, dimensions) =
+                        floor(array_access<double>(centers, cluster_iter, dim_iter, dimensions)/cluster_sizes[cluster_iter] + 0.5);
                 }
             }
         }
+
         iterations++;
     }
     stop_timer();
@@ -84,9 +86,13 @@ int kmeans_serial(uchar *particle_data, int particle_count, int dimensions, int 
     return 0;
 }
 
+
+/**
+ * Naive cluster select
+ */
 int select_centers_serial(uchar *particle_data, int particle_count, int dimensions, int cluster_count, double *centers) {
     for (int center_iter = 0; center_iter < cluster_count; center_iter++) {
-        int particle_select = rand()%particle_count;
+        int particle_select = rand() % particle_count;
         for (int dim_iter = 0; dim_iter < dimensions; dim_iter++) {
             array_access<double>(centers, center_iter, dim_iter, dimensions) = (double)array_access<uchar>(particle_data, particle_select, dim_iter, dimensions);
         }
@@ -94,17 +100,25 @@ int select_centers_serial(uchar *particle_data, int particle_count, int dimensio
     return 0;
 }
 
+
+/**
+ * Smarter cluster select method
+ */
 int select_centerspp_serial(uchar *particle_data, int particle_count, int dimensions, int cluster_count, double *centers) {
     double *particle_distr = new double[particle_count];
     int distr_length = RAND_MAX;
-    int particle_select = rand()%particle_count;
+
+    // Select the first center randomly
+    int particle_select = rand() % particle_count;
     for (int dim_iter = 0; dim_iter < dimensions; dim_iter++) {
         array_access<double>(centers, 0, dim_iter, dimensions) = (double)array_access<uchar>(particle_data, particle_select, dim_iter, dimensions);
     }
+
+    // Select the other n - 1 centers
     for (int center_iter = 1; center_iter < cluster_count; center_iter++) {
         // calc probability for each particle as center 
         for (int particle_iter = 0; particle_iter < particle_count; particle_iter++) { // TODO parallel for
-            // find closest center
+            // find closest center based on previously calculated centers
             double min_dist = std::numeric_limits<double>::max();
             for (int center_dist_iter = 0; center_dist_iter < center_iter; center_dist_iter++) {
                 double dist = compute_distance(particle_data, particle_iter, centers, center_dist_iter, dimensions);
@@ -114,26 +128,39 @@ int select_centerspp_serial(uchar *particle_data, int particle_count, int dimens
             }
             particle_distr[particle_iter] = min_dist;
         }
-        double particle_sum = 0;
+
+        // Prefix sum
         for (int particle_iter = 1; particle_iter < particle_count; particle_iter++) { // TODO parallel prefix sum
             particle_distr[particle_iter] += particle_distr[particle_iter-1];
         }
+
+        // Select new center
         double distr_ratio = particle_distr[particle_count-1] / distr_length;
-        int select_pos = rand()%distr_length;
+        int select_pos = rand() % distr_length;
         for (int particle_iter = 0; particle_iter < particle_count; particle_iter++) {  // TODO search - make binary, parallelize (note break, tricky)
-            if (particle_distr[particle_iter] > select_pos*distr_ratio) {
+            if (particle_distr[particle_iter] > select_pos * distr_ratio) {
                 particle_select = particle_iter;
                 break;
             }
         }
+
+        // Copy new center to array
         for (int dim_iter = 0; dim_iter < dimensions; dim_iter++) {
             array_access<double>(centers, center_iter, dim_iter, dimensions) = (double)array_access<uchar>(particle_data, particle_select, dim_iter, dimensions);
         }
     }
+
     delete [] particle_distr;
+
     return 0;
 }
 
+/**
+ * Computers
+ * (H_1 - H_C)^2 + (S_1 - S_C)^2 + (V_1 - V_C)^2
+ *
+ * Maybe should be square root of above?
+ */
 double compute_distance(uchar *particle_data, const int particle_iter, double *centers, const int center_iter, const int dimensions) {
     double dist = 0;
     for (int dim_iter = 0; dim_iter < dimensions; dim_iter++) {

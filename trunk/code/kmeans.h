@@ -11,8 +11,14 @@
 
 #define uchar unsigned char
 
+/**
+ * Images are arranged such that packed 8-bit RGB values
+ * That is { {H, S, V}, {H, S, V}, ...}
+ *
+ * @return array[particle_num*num_of_dimensions+which_dimension]
+ */
 template <typename T> 
-inline T &array_access(T *arr, const int main_iter, const int sub_iter, const int sub_count)
+inline T &array_access(T *arr, const int main_iter, const int sub_iter, const int sub_count = 3)
 {
     return arr[main_iter*sub_count+sub_iter];
 }
