@@ -48,6 +48,26 @@ public:
 };
 
 
+class KmeansStep2b {
+    double* centers;
+    double* cluster_sizes;
+    int dimensions;
+public:
+    void operator() (const blocked_range<size_t>& r) const {
+        for (size_t cluster_iter = r.begin(); cluster_iter != r.end(); ++cluster_iter) {
+            for (int dim_iter = 0; dim_iter < dimensions; dim_iter++) {
+                array_access<double>(centers, cluster_iter, dim_iter, dimensions) =
+                    floor(array_access<double>(centers, cluster_iter, dim_iter, dimensions)/cluster_sizes[cluster_iter] + 0.5);
+            }
+        }
+        return;
+    }
+    KmeansStep2b(double* _centers, double* _cluster_sizes, int _dimensions) :
+        centers(_centers), cluster_sizes(_cluster_sizes), dimensions(_dimensions) {}
+};
+
+
+
 int kmeans_tbb(uchar *data, int particle_count, int dimensions, int cluster_count, uchar *assignments, int grainSizeStep1);
 
 #endif
