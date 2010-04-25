@@ -52,11 +52,8 @@ int kmeans_tbb(uchar *particle_data, int particle_count, int dimensions, int clu
             }
 
             // divide by number of assigned particles to get mean
-            for (int cluster_iter = 0; cluster_iter < cluster_count; cluster_iter++) {
-                for (int dim_iter = 0; dim_iter < dimensions; dim_iter++) {
-                    array_access<double>(centers, cluster_iter, dim_iter, dimensions) = floor(array_access<double>(centers, cluster_iter, dim_iter, dimensions)/cluster_sizes[cluster_iter] + 0.5);
-                }
-            }
+            int grainSizeStep2b = 2;
+            parallel_for(blocked_range<size_t>(0, cluster_count, grainSizeStep2b), KmeansStep2b(centers, cluster_sizes, dimensions));
         }
         iterations++;
     }
