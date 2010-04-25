@@ -1,1 +1,0 @@
-g++ -o Kmeans_demo code/kmeans.cpp code/Kmeans_demo.cpp code/timer.cpp code/kmeanstbb.cpp -I ~cis534/public/tbb/include/ -L ~cis534/public/tbb/build/linux_intel64_gcc_cc4.3.2_libc2.9_kernel2.6.27.29_release -I opencv/include/opencv -L opencv/lib64 -lcv -lcvaux -lcxcore -lhighgui -lml -ltbb
