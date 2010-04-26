@@ -34,7 +34,8 @@ int main(int argc, char **argv) {
     int cluster_count = 10;
     uchar *assignments = new uchar[particle_count];
 //    kmeans_serial(data, particle_count, channels, cluster_count, assignments);
-    kmeans_tbb(data, particle_count, channels, cluster_count, assignments);
+    int grainSize = 1024;
+    kmeans_tbb(data, particle_count, channels, cluster_count, assignments, grainSize);
 
     IplImage *outImg = cvCreateImage( cvGetSize(img), 8, 1 );
     output_assignments(outImg, assignments, cluster_count, particle_count);
