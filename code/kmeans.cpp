@@ -1,11 +1,12 @@
 #include "kmeans.h"
 
-int kmeans_serial(uchar *particle_data, int particle_count, int dimensions, int cluster_count, uchar *assignments) {
-    reset_timer();
+int kmeans_serial(uchar *particle_data, double *centers, int particle_count, int dimensions, int cluster_count, uchar *assignments) {
+    reset_timer( 1 );
+    reset_timer( 2 );
+    reset_timer( 3 );
 //    srand( time(NULL) );
 
     // assign centers
-    double *centers = new double[cluster_count*dimensions];
     double *cluster_sizes = new double[cluster_count];
     if (select_centers_serial(particle_data, particle_count, dimensions, cluster_count, centers) != 0 ) {
         printf("Error selecting centers");
@@ -13,13 +14,14 @@ int kmeans_serial(uchar *particle_data, int particle_count, int dimensions, int 
     }
 
     // iterate until clusters converge
-    start_timer();
+    start_timer( 3 );
     int iterations = 0;
     bool assignment_change = true;
     while(assignment_change) {
         assignment_change = false;
 
         // step 1
+        start_timer( 1 );
         for (int particle_iter = 0; particle_iter < particle_count; particle_iter++) { // TODO parallel for
             
             // find closest center
@@ -39,14 +41,16 @@ int kmeans_serial(uchar *particle_data, int particle_count, int dimensions, int 
                 assignment_change = true;
             }
         }
+        stop_timer( 1 );
     
         // step 2
         if (assignment_change) {
+            start_timer( 2 );
         
             // initialize centers to 0
             for (int cluster_iter = 0; cluster_iter < cluster_count; cluster_iter++) {
                 for (int dim_iter = 0; dim_iter < dimensions; dim_iter++) {
-                    array_access<double>(centers, cluster_iter, dim_iter, dimensions) = 0;
+                    array_store<double>(centers, cluster_iter, dim_iter, dimensions) = 0;
                 }
             }
             for (int cluster_iter = 0; cluster_iter < cluster_count; cluster_iter++) {
@@ -58,7 +62,7 @@ int kmeans_serial(uchar *particle_data, int particle_count, int dimensions, int 
                 int cluster_assignment = (int)assignments[particle_iter];
                 cluster_sizes[cluster_assignment]++;
                 for (int dim_iter = 0; dim_iter < dimensions; dim_iter++) {
-                    array_access<double>(centers, cluster_assignment, dim_iter, dimensions) += (double)array_access<uchar>(particle_data, particle_iter, dim_iter, dimensions);
+                    array_store<double>(centers, cluster_assignment, dim_iter, dimensions) += (double)array_load<uchar>(particle_data, particle_iter, dim_iter, dimensions);
 
                 }
             }
@@ -66,19 +70,22 @@ int kmeans_serial(uchar *particle_data, int particle_count, int dimensions, int 
             // divide by number of assigned particles to get mean
             for (int cluster_iter = 0; cluster_iter < cluster_count; cluster_iter++) {
                 for (int dim_iter = 0; dim_iter < dimensions; dim_iter++) {
-                    array_access<double>(centers, cluster_iter, dim_iter, dimensions) =
-                        floor(array_access<double>(centers, cluster_iter, dim_iter, dimensions)/cluster_sizes[cluster_iter] + 0.5);
+                    array_store<double>(centers, cluster_iter, dim_iter, dimensions) =
+                        floor(array_load<double>(centers, cluster_iter, dim_iter, dimensions)/cluster_sizes[cluster_iter] + 0.5);
                 }
             }
+            stop_timer( 2 );
         }
 
         iterations++;
     }
-    stop_timer();
-    printf("Convergence Calc: %f seconds, %d iterations\n", get_time_elapsed(), iterations);
+    stop_timer( 3 );
+    printf("Step1: %f seconds, %d iterations, %d clusters\n", get_time_elapsed( 1 ), iterations, cluster_count);
+    printf("Step2: %f seconds, %d iterations, %d clusters\n", get_time_elapsed( 2 ), iterations, cluster_count);
+    printf("Total: %f seconds, %d iterations, %d clusters\n", get_time_elapsed( 3 ), iterations, cluster_count);
 
     // release memory
-    delete [] centers;
+    delete [] cluster_sizes;
     return 0;
 }
 
@@ -90,7 +97,7 @@ int select_centers_serial(uchar *particle_data, int particle_count, int dimensio
     for (int center_iter = 0; center_iter < cluster_count; center_iter++) {
         int particle_select = rand() % particle_count;
         for (int dim_iter = 0; dim_iter < dimensions; dim_iter++) {
-            array_access<double>(centers, center_iter, dim_iter, dimensions) = (double)array_access<uchar>(particle_data, particle_select, dim_iter, dimensions);
+            array_store<double>(centers, center_iter, dim_iter, dimensions) = (double)array_load<uchar>(particle_data, particle_select, dim_iter, dimensions);
         }
     }
     return 0;
@@ -107,7 +114,7 @@ int select_centerspp_serial(uchar *particle_data, int particle_count, int dimens
     // Select the first center randomly
     int particle_select = rand() % particle_count;
     for (int dim_iter = 0; dim_iter < dimensions; dim_iter++) {
-        array_access<double>(centers, 0, dim_iter, dimensions) = (double)array_access<uchar>(particle_data, particle_select, dim_iter, dimensions);
+        array_store<double>(centers, 0, dim_iter, dimensions) = (double)array_load<uchar>(particle_data, particle_select, dim_iter, dimensions);
     }
 
     // Select the other n - 1 centers
@@ -142,12 +149,10 @@ int select_centerspp_serial(uchar *particle_data, int particle_count, int dimens
 
         // Copy new center to array
         for (int dim_iter = 0; dim_iter < dimensions; dim_iter++) {
-            array_access<double>(centers, center_iter, dim_iter, dimensions) = (double)array_access<uchar>(particle_data, particle_select, dim_iter, dimensions);
+            array_store<double>(centers, center_iter, dim_iter, dimensions) = (double)array_load<uchar>(particle_data, particle_select, dim_iter, dimensions);
         }
     }
-
     delete [] particle_distr;
-
     return 0;
 }
 
@@ -160,7 +165,7 @@ int select_centerspp_serial(uchar *particle_data, int particle_count, int dimens
 double compute_distance(uchar *particle_data, const int particle_iter, double *centers, const int center_iter, const int dimensions) {
     double dist = 0;
     for (int dim_iter = 0; dim_iter < dimensions; dim_iter++) {
-        dist += pow( (double)array_access<uchar>(particle_data, particle_iter, dim_iter, dimensions) - array_access<double>(centers, center_iter, dim_iter, dimensions), 2 );
+        dist += pow( (double)array_store<uchar>(particle_data, particle_iter, dim_iter, dimensions) - array_load<double>(centers, center_iter, dim_iter, dimensions), 2 );
     }
     return dist;
 }
