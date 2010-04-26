@@ -2,20 +2,15 @@
 
 int kmeans_serial(uchar *particle_data, int particle_count, int dimensions, int cluster_count, uchar *assignments) {
     reset_timer();
-    start_timer();
 //    srand( time(NULL) );
 
     // assign centers
     double *centers = new double[cluster_count*dimensions];
     double *cluster_sizes = new double[cluster_count];
-    if (select_centerspp_serial(particle_data, particle_count, dimensions, cluster_count, centers) != 0 ) {
+    if (select_centers_serial(particle_data, particle_count, dimensions, cluster_count, centers) != 0 ) {
         printf("Error selecting centers");
         return -1;
     }
-    stop_timer();
-    printf("%f seconds elapsed selecting centers\n", get_time_elapsed());
-    reset_timer();
-    start_timer();
 
     // iterate until clusters converge
     int iterations = 0;
@@ -46,7 +41,8 @@ int kmeans_serial(uchar *particle_data, int particle_count, int dimensions, int 
 
         // step 2
         if (assignment_change) {
-
+            start_timer();
+        
             // initialize centers to 0
             for (int cluster_iter = 0; cluster_iter < cluster_count; cluster_iter++) {
                 for (int dim_iter = 0; dim_iter < dimensions; dim_iter++) {
@@ -74,12 +70,12 @@ int kmeans_serial(uchar *particle_data, int particle_count, int dimensions, int 
                         floor(array_access<double>(centers, cluster_iter, dim_iter, dimensions)/cluster_sizes[cluster_iter] + 0.5);
                 }
             }
+            stop_timer();
         }
 
         iterations++;
     }
-    stop_timer();
-    printf("%f seconds elapsed revising centers over %d iterations\n", get_time_elapsed(), iterations);
+    printf("Reduce Calc: %f seconds, %d iterations\n", get_time_elapsed(), iterations);
 
     // release memory
     delete [] centers;
@@ -156,7 +152,7 @@ int select_centerspp_serial(uchar *particle_data, int particle_count, int dimens
 }
 
 /**
- * Computers
+ * Computes
  * (H_1 - H_C)^2 + (S_1 - S_C)^2 + (V_1 - V_C)^2
  *
  * Maybe should be square root of above?
