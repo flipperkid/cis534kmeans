@@ -20,7 +20,7 @@ void reset_timer( ) {
 }
 
 void start_timer( ) { 
-    start = time(NULL); 
+    start = get_seconds(); 
     running = true;
 }
 

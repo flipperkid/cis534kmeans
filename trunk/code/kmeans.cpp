@@ -13,6 +13,7 @@ int kmeans_serial(uchar *particle_data, int particle_count, int dimensions, int 
     }
 
     // iterate until clusters converge
+    start_timer();
     int iterations = 0;
     bool assignment_change = true;
     while(assignment_change) {
@@ -38,10 +39,9 @@ int kmeans_serial(uchar *particle_data, int particle_count, int dimensions, int 
                 assignment_change = true;
             }
         }
-
+    
         // step 2
         if (assignment_change) {
-            start_timer();
         
             // initialize centers to 0
             for (int cluster_iter = 0; cluster_iter < cluster_count; cluster_iter++) {
@@ -70,12 +70,12 @@ int kmeans_serial(uchar *particle_data, int particle_count, int dimensions, int 
                         floor(array_access<double>(centers, cluster_iter, dim_iter, dimensions)/cluster_sizes[cluster_iter] + 0.5);
                 }
             }
-            stop_timer();
         }
 
         iterations++;
     }
-    printf("Reduce Calc: %f seconds, %d iterations\n", get_time_elapsed(), iterations);
+    stop_timer();
+    printf("Convergence Calc: %f seconds, %d iterations\n", get_time_elapsed(), iterations);
 
     // release memory
     delete [] centers;
