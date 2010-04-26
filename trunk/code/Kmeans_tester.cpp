@@ -34,10 +34,8 @@ int main(int argc, char **argv) {
     // call to kmeans framework
     int cluster_count = 50;
     uchar *assignments = new uchar[particle_count];
-//    kmeans_serial(data, particle_count, channels, cluster_count, assignments);
-    kmeans_tbb( data, particle_count, channels, cluster_count, assignments, grainsize );
-
-    IplImage *outImg = cvCreateImage( cvGetSize(img), 8, 1 );
+    kmeans_serial(data, particle_count, channels, cluster_count, assignments);
+//    kmeans_tbb( data, particle_count, channels, cluster_count, assignments, grainsize );
  
     // release memory
     delete [] assignments; 

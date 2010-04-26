@@ -4,7 +4,7 @@
 #include <cv.h>
 #include <highgui.h>
 #include "kmeans.h"
-#include "kmeanstbb.h"
+#include "kmeans_tbb.h"
 
 int output_assignments(IplImage *img, uchar *assignments, int cluster_count, int particle_count);
 
