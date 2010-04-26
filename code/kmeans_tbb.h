@@ -68,7 +68,7 @@ public:
 
 
 
-int kmeans_tbb(uchar *data, int particle_count, int dimensions, int cluster_count, uchar *assignments, int grainSizeStep1);
+int kmeans_tbb( uchar *data, int particle_count, int dimensions, int cluster_count, uchar *assignments, int grainSize );
 
 #endif
 
