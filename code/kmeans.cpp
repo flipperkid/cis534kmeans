@@ -80,9 +80,9 @@ int kmeans_serial(uchar *particle_data, double *centers, int particle_count, int
         iterations++;
     }
     stop_timer( 3 );
-    printf("Step1: %f seconds, %d iterations, %d clusters\n", get_time_elapsed( 1 ), iterations, cluster_count);
-    printf("Step2: %f seconds, %d iterations, %d clusters\n", get_time_elapsed( 2 ), iterations, cluster_count);
-    printf("Total: %f seconds, %d iterations, %d clusters\n", get_time_elapsed( 3 ), iterations, cluster_count);
+    printf("Step1: %f seconds, %d particles, %d clusters, %d iterations, 1 threads\n", get_time_elapsed( 1 ), particle_count, cluster_count, iterations);
+    printf("Step2: %f seconds, %d particles, %d clusters, %d iterations, 1 threads\n", get_time_elapsed( 2 ), particle_count, cluster_count, iterations);
+    printf("Total: %f seconds, %d particles, %d clusters, %d iterations, 1 threads\n", get_time_elapsed( 3 ), particle_count, cluster_count, iterations);
 
     // release memory
     delete [] cluster_sizes;

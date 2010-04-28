@@ -1,11 +1,11 @@
 #include "kmeans_tbb.h"
 
-int kmeans_tbb(uchar *particle_data, double *centers, int particle_count, int dimensions, int cluster_count, uchar *assignments, int grainSize) {
+int kmeans_tbb(uchar *particle_data, double *centers, int particle_count, int dimensions, int cluster_count, uchar *assignments, int grainSize, int thread_count) {
     reset_timer( 1 );
     reset_timer( 2 );
     reset_timer( 3 );
 //    srand( time(NULL) );
-    task_scheduler_init init;
+    task_scheduler_init init(thread_count);
 
     // assign centers
     if (select_centers_serial(particle_data, particle_count, dimensions, cluster_count, centers) != 0 ) {
@@ -40,10 +40,10 @@ int kmeans_tbb(uchar *particle_data, double *centers, int particle_count, int di
         iterations++;
     }
     stop_timer( 3 );
-    printf("Step1: %f seconds, %d iterations, %d clusters, %d grainsize\n", get_time_elapsed( 1 ), iterations, cluster_count, grainSize);
-    printf("Step2: %f seconds, %d iterations, %d clusters, %d grainsize\n", get_time_elapsed( 2 ), iterations, cluster_count, grainSize);
-    printf("Total: %f seconds, %d iterations, %d clusters, %d grainsize\n", get_time_elapsed( 3 ), iterations, cluster_count, grainSize);
-
+    printf("Step1: %f seconds, %d particles, %d clusters, %d iterations, %d threads, %d grainsize\n", get_time_elapsed( 1 ), particle_count, cluster_count, iterations, thread_count, grainSize);
+    printf("Step2: %f seconds, %d particles, %d clusters, %d iterations, %d threads, %d grainsize\n", get_time_elapsed( 2 ), particle_count, cluster_count, iterations, thread_count, grainSize);
+    printf("Total: %f seconds, %d particles, %d clusters, %d iterations, %d threads, %d grainsize\n", get_time_elapsed( 3 ), particle_count, cluster_count, iterations, thread_count, grainSize);
+    
     // release memory
     return 0;
 }
