@@ -125,7 +125,7 @@ public:
         centers(_centers), center_sums(_center_sums), cluster_sizes(_cluster_sizes), dimensions(_dimensions) {}
 };            
 
-int kmeans_tbb( uchar *data, double *centers, int particle_count, int dimensions, int cluster_count, uchar *assignments, int grainSize );
+int kmeans_tbb( uchar *data, double *centers, int particle_count, int dimensions, int cluster_count, uchar *assignments, int grainSize, int thread_count );
 
 #endif
 
