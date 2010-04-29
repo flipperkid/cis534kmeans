@@ -1,6 +1,6 @@
 #include "kmeans_tbb.h"
 
-int kmeans_tbb(uchar *particle_data, double *centers, int particle_count, int dimensions, int cluster_count, uchar *assignments, int grainSize, int thread_count) {
+int kmeans_tbb(uchar *particle_data, float *centers, int particle_count, int dimensions, int cluster_count, uchar *assignments, int grainSize, int thread_count) {
     reset_timer( 1 );
     reset_timer( 2 );
     reset_timer( 3 );

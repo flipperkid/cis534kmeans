@@ -32,7 +32,7 @@ int main(int argc, char **argv) {
     uchar *data = (uchar *)hsvImg->imageData;
     
     // call to kmeans framework
-    double *centers = new double[cluster_count*channels];
+    float *centers = new float[cluster_count*channels];
     uchar *assignments = new uchar[particle_count];
     for( int particle_iter = 0; particle_iter < particle_count; particle_iter++ ) {
         assignments[particle_iter] = UCHAR_MAX;
