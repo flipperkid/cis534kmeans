@@ -40,8 +40,8 @@ int main(int argc, char **argv) {
         assignments[particle_iter] = UCHAR_MAX;
     }
 //    kmeans_serial(data, centers, particle_count, channels, cluster_count, assignments);
-    kmeans_tri(data, centers, particle_count, channels, cluster_count, assignments);
-//    kmeans_tbb( data, centers, particle_count, channels, cluster_count, assignments, grainsize, thread_count );
+//    kmeans_tri(data, centers, particle_count, channels, cluster_count, assignments);
+    kmeans_tbb( data, centers, particle_count, channels, cluster_count, assignments, grainsize, thread_count );
  
     // release memory
     delete [] assignments; 

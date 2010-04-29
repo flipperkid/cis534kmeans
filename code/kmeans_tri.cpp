@@ -52,9 +52,9 @@ int kmeans_tri(uchar *particle_data, float *&centers, int particle_count, int di
     }
     stop_timer( 3 );
 
-    printf("Step1: %f seconds, %d particles, %d clusters, %d iterations, dimensions, 1 threads\n", get_time_elapsed( 1 ), particle_count, cluster_count, iterations, dimensions);
-    printf("Step2: %f seconds, %d particles, %d clusters, %d iterations, dimensions, 1 threads\n", get_time_elapsed( 2 ), particle_count, cluster_count, iterations, dimensions);
-    printf("Total: %f seconds, %d particles, %d clusters, %d iterations, dimensions, 1 threads\n", get_time_elapsed( 3 ), particle_count, cluster_count, iterations, dimensions);
+    printf("Step1: %f seconds, %d particles, %d clusters, %d dimensions, %d iterations, 1 threads\n", get_time_elapsed( 1 ), particle_count, cluster_count, dimensions, iterations);
+    printf("Step2: %f seconds, %d particles, %d clusters, %d dimensions, %d iterations, 1 threads\n", get_time_elapsed( 2 ), particle_count, cluster_count, dimensions, iterations);
+    printf("Total: %f seconds, %d particles, %d clusters, %d dimensions, %d iterations, 1 threads\n", get_time_elapsed( 3 ), particle_count, cluster_count, dimensions, iterations);
 
     // release memory
     delete [] cluster_sizes;
@@ -76,7 +76,7 @@ void step1_tri( uchar *particle_data, float *centers, int particle_count, int cl
     }
     for( int cluster_iter1 = 0; cluster_iter1 < cluster_count; cluster_iter1++) {
         for( int cluster_iter2 = cluster_iter1+1; cluster_iter2 < cluster_count; cluster_iter2++) {
-            float dist = 0.25f*compute_distance(centers, cluster_iter1, centers, cluster_iter2, dimensions);
+            float dist = 0.25f*compute_distance<float, float>(centers, cluster_iter1, centers, cluster_iter2, dimensions);
             center_dists[cluster_iter1][cluster_iter2] = dist;
             center_dists[cluster_iter2][cluster_iter1] = dist;
             if(dist < short_dist[cluster_iter1]) {
@@ -96,7 +96,7 @@ void step1_tri( uchar *particle_data, float *centers, int particle_count, int cl
                     ubound[particle_iter] > center_dists[center_iter][cluster_assignment] ) ) {
                     float dist;
                     if( ubound_invalid[particle_iter] ) {
-                        dist = compute_distance(particle_data, particle_iter, centers, cluster_assignment, dimensions);
+                        dist = compute_distance<uchar, float>(particle_data, particle_iter, centers, cluster_assignment, dimensions);
                         ubound[particle_iter] = dist;
                         array_store(lbound, particle_iter, cluster_assignment, cluster_count) = dist;
                         ubound_invalid[particle_iter] = false;
@@ -105,7 +105,7 @@ void step1_tri( uchar *particle_data, float *centers, int particle_count, int cl
                         dist = ubound[particle_iter];
                     }
                     if( dist > array_load(lbound, particle_iter, center_iter, cluster_count) || dist > center_dists[center_iter][cluster_assignment] ) {
-                        float dist_new = compute_distance(particle_data, particle_iter, centers, center_iter, dimensions);
+                        float dist_new = compute_distance<uchar, float>(particle_data, particle_iter, centers, center_iter, dimensions);
                         array_store(lbound, particle_iter, center_iter, cluster_count) = dist_new;
                         if( dist_new < dist ) {
                             cluster_assignment = center_iter;
@@ -149,7 +149,7 @@ void step2_tri( uchar *particle_data, float *&centers, float *&means_new, float 
         }
     }
     for (int center_iter = 0; center_iter < cluster_count; center_iter++) {
-        center_shift[center_iter] = compute_distance(means_new, center_iter, centers, center_iter, dimensions);
+        center_shift[center_iter] = compute_distance<float, float>(means_new, center_iter, centers, center_iter, dimensions);
     }
     for( int particle_iter = 0; particle_iter < particle_count; particle_iter++ ) {
         for( int center_iter = 0; center_iter < cluster_count; center_iter++ ) {

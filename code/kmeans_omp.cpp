@@ -29,7 +29,13 @@ int kmeans_omp(uchar *particle_data, float *centers, int particle_count, int dim
         for (int particle_iter = 0; particle_iter < particle_count; particle_iter++) { // TODO parallel for
             // find closest center
             int cluster_assignment = (int)assignments[particle_iter];
-            float min_dist = compute_distance<uchar, float>(particle_data, particle_iter, centers, cluster_assignment, dimensions);
+            float min_dist;
+            if(cluster_assignment < cluster_count) {
+                min_dist = compute_distance<uchar, float>(particle_data, particle_iter, centers, cluster_assignment, dimensions);
+            }
+            else {
+                min_dist = std::numeric_limits<float>::max();
+            }
             for (int center_iter = 0; center_iter < cluster_count; center_iter++) {
                 if( center_iter != cluster_assignment ) {
                     float dist = compute_distance<uchar, float>(particle_data, particle_iter, centers, center_iter, dimensions);
