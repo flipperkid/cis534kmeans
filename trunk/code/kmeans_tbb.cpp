@@ -40,12 +40,12 @@ int kmeans_tbb(uchar *particle_data, float *centers, int particle_count, int dim
         iterations++;
     }
     stop_timer( 3 );
-    printf("Step1: %f seconds, %d particles, %d clusters, %d iterations, %d dimensions, %d threads, %d grainsize\n", 
-            get_time_elapsed( 1 ), particle_count, cluster_count, iterations, dimensions, thread_count, grainSize);
-    printf("Step2: %f seconds, %d particles, %d clusters, %d iterations, %d dimensions, %d threads, %d grainsize\n", 
-            get_time_elapsed( 2 ), particle_count, cluster_count, iterations, dimensions, thread_count, grainSize);
-    printf("Total: %f seconds, %d particles, %d clusters, %d iterations, %d dimensions, %d threads, %d grainsize\n", 
-            get_time_elapsed( 3 ), particle_count, cluster_count, iterations, dimensions, thread_count, grainSize);
+    printf("Step1: %f seconds, %d particles, %d clusters, %d dimensions, %d iterations, %d threads, %d grainsize\n", 
+            get_time_elapsed( 1 ), particle_count, cluster_count, dimensions, iterations, thread_count, grainSize);
+    printf("Step2: %f seconds, %d particles, %d clusters, %d dimensions, %d iterations, %d threads, %d grainsize\n", 
+            get_time_elapsed( 2 ), particle_count, cluster_count, dimensions, iterations, thread_count, grainSize);
+    printf("Total: %f seconds, %d particles, %d clusters, %d dimensions, %d iterations, %d threads, %d grainsize\n", 
+            get_time_elapsed( 3 ), particle_count, cluster_count, dimensions, iterations, thread_count, grainSize);
     
     // release memory
     return 0;

@@ -25,7 +25,13 @@ int kmeans_serial(uchar *particle_data, float *centers, int particle_count, int 
         for (int particle_iter = 0; particle_iter < particle_count; particle_iter++) { // TODO parallel for            
             // find closest center
             int cluster_assignment = (int)assignments[particle_iter];
-            float min_dist = compute_distance<uchar, float>(particle_data, particle_iter, centers, cluster_assignment, dimensions);
+            float min_dist;
+            if(cluster_assignment < cluster_count) {
+                min_dist = compute_distance<uchar, float>(particle_data, particle_iter, centers, cluster_assignment, dimensions);
+            }
+            else {
+                min_dist = std::numeric_limits<float>::max();
+            }
             for (int center_iter = 0; center_iter < cluster_count; center_iter++) {
                 if( center_iter != cluster_assignment ) {
                     float dist = compute_distance<uchar, float>(particle_data, particle_iter, centers, center_iter, dimensions);
@@ -79,9 +85,9 @@ int kmeans_serial(uchar *particle_data, float *centers, int particle_count, int 
         iterations++;
     }
     stop_timer( 3 );
-    printf("Step1: %f seconds, %d particles, %d clusters, %d iterations, dimensions, 1 threads\n", get_time_elapsed( 1 ), particle_count, cluster_count, iterations, dimensions);
-    printf("Step2: %f seconds, %d particles, %d clusters, %d iterations, dimensions, 1 threads\n", get_time_elapsed( 2 ), particle_count, cluster_count, iterations, dimensions);
-    printf("Total: %f seconds, %d particles, %d clusters, %d iterations, dimensions, 1 threads\n", get_time_elapsed( 3 ), particle_count, cluster_count, iterations, dimensions);
+    printf("Step1: %f seconds, %d particles, %d clusters, %d dimensions, %d iterations, 1 threads\n", get_time_elapsed( 1 ), particle_count, cluster_count, dimensions, iterations);
+    printf("Step2: %f seconds, %d particles, %d clusters, %d dimensions, %d iterations, 1 threads\n", get_time_elapsed( 2 ), particle_count, cluster_count, dimensions, iterations);
+    printf("Total: %f seconds, %d particles, %d clusters, %d dimensions, %d iterations, 1 threads\n", get_time_elapsed( 3 ), particle_count, cluster_count, dimensions, iterations);
 
     // release memory
     delete [] cluster_sizes;

@@ -36,16 +36,12 @@ int select_centerspp_serial(uchar *data, int particle_count, int dimensions, int
  *
  * Maybe should be square root of above?
  */
-template <typename T1, typename T2> float compute_distance(T1 *particle_data, const int particle_iter, T2 *centers, const int center_iter, const int dimensions) {
+template <typename T1, typename T2> inline float compute_distance(T1 *particle_data, const int particle_iter, T2 *centers, const int center_iter, const int dimensions) {
     float dist = 0;
     for (int dim_iter = 0; dim_iter < dimensions; dim_iter++) {
         dist += pow( (float)array_store<T1>(particle_data, particle_iter, dim_iter, dimensions) - (float)array_load<T2>(centers, center_iter, dim_iter, dimensions), 2 );
     }
     return dist;
-}
-
-template <typename T1, typename T2> float compute_distance2(T1 *particle_data, const int particle_iter, T2 *centers, const int center_iter, const int dimensions) {
-    return sqrt(compute_distance<T1, T2>(particle_data, particle_iter, centers, center_iter, dimensions));
 }
 
 #endif
