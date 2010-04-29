@@ -29,12 +29,12 @@ inline T array_load(const T *arr, const int main_iter, const int sub_iter, const
     return arr[main_iter*sub_count+sub_iter];
 }
 
-int kmeans_serial(uchar *data, double *centers, int particle_count, int dimensions, int cluster_count, uchar *assignments);
+int kmeans_serial(uchar *data, float *centers, int particle_count, int dimensions, int cluster_count, uchar *assignments);
 
-int select_centers_serial(uchar *data, int particle_count, int dimensions, int cluster_count, double *centers);
-int select_centerspp_serial(uchar *data, int particle_count, int dimensions, int cluster_count, double *centers);
+int select_centers_serial(uchar *data, int particle_count, int dimensions, int cluster_count, float *centers);
+int select_centerspp_serial(uchar *data, int particle_count, int dimensions, int cluster_count, float *centers);
 
-double compute_distance(uchar *particle_data, const int particle_iter, double *centers, const int center_iter, const int dimensions);
+float compute_distance(uchar *particle_data, const int particle_iter, float *centers, const int center_iter, const int dimensions);
 
 #endif
 
