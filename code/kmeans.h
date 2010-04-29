@@ -17,15 +17,11 @@
  *
  * @return array[particle_num*num_of_dimensions+which_dimension]
  */
-template <typename T> 
-inline T &array_store(T *arr, const int main_iter, const int sub_iter, const int sub_count = 3)
-{
+template <typename T> inline T &array_store(T *arr, const int main_iter, const int sub_iter, const int sub_count = 3) {
     return arr[main_iter*sub_count+sub_iter];
 }
 
-template <typename T> 
-inline T array_load(const T *arr, const int main_iter, const int sub_iter, const int sub_count = 3)
-{
+template <typename T> inline T array_load(const T *arr, const int main_iter, const int sub_iter, const int sub_count = 3) {
     return arr[main_iter*sub_count+sub_iter];
 }
 
@@ -34,7 +30,23 @@ int kmeans_serial(uchar *data, float *centers, int particle_count, int dimension
 int select_centers_serial(uchar *data, int particle_count, int dimensions, int cluster_count, float *centers);
 int select_centerspp_serial(uchar *data, int particle_count, int dimensions, int cluster_count, float *centers);
 
-float compute_distance(uchar *particle_data, const int particle_iter, float *centers, const int center_iter, const int dimensions);
+/**
+ * Computes
+ * (H_1 - H_C)^2 + (S_1 - S_C)^2 + (V_1 - V_C)^2
+ *
+ * Maybe should be square root of above?
+ */
+template <typename T1, typename T2> float compute_distance(T1 *particle_data, const int particle_iter, T2 *centers, const int center_iter, const int dimensions) {
+    float dist = 0;
+    for (int dim_iter = 0; dim_iter < dimensions; dim_iter++) {
+        dist += pow( (float)array_store<T1>(particle_data, particle_iter, dim_iter, dimensions) - (float)array_load<T2>(centers, center_iter, dim_iter, dimensions), 2 );
+    }
+    return dist;
+}
+
+template <typename T1, typename T2> float compute_distance2(T1 *particle_data, const int particle_iter, T2 *centers, const int center_iter, const int dimensions) {
+    return sqrt(compute_distance<T1, T2>(particle_data, particle_iter, centers, center_iter, dimensions));
+}
 
 #endif
 

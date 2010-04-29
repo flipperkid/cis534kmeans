@@ -27,19 +27,20 @@ public:
     void operator()( const blocked_range<size_t>& r ) const {
         for( size_t particle_iter=r.begin(); particle_iter!=r.end(); ++particle_iter ) {
             // find closest center
-            float min_dist = std::numeric_limits<float>::max();
-            uchar cluster_assignment = std::numeric_limits<uchar>::max();
+            int cluster_assignment = (int)assignments[particle_iter];
+            float min_dist = compute_distance<uchar, float>(particle_data, particle_iter, centers, cluster_assignment, dimensions);
             for (int center_iter = 0; center_iter < cluster_count; center_iter++) {
-                float dist = compute_distance(particle_data, particle_iter, centers, center_iter, dimensions);
-                if (dist < min_dist) {
-                    min_dist = dist;
-                    cluster_assignment = (uchar)center_iter;
+                if( center_iter != cluster_assignment ) {
+                    float dist = compute_distance<uchar, float>(particle_data, particle_iter, centers, center_iter, dimensions);
+                    if (dist < min_dist) {
+                        min_dist = dist;
+                        cluster_assignment = center_iter;
+                    }
                 }
             }
-            
             // assign to closest center
-            if (cluster_assignment != assignments[particle_iter]) {
-                assignments[particle_iter] = cluster_assignment;
+            if (cluster_assignment != (int)assignments[particle_iter]) {
+                assignments[particle_iter] = (uchar)cluster_assignment;
                 *assignment_change = true;
             }
         }
@@ -116,7 +117,7 @@ public:
         for (size_t cluster_iter = r.begin(); cluster_iter != r.end(); ++cluster_iter) {
             for (int dim_iter = 0; dim_iter < dimensions; dim_iter++) {
                 array_store<float>(centers, cluster_iter, dim_iter, dimensions) =
-                    floor(array_load<float>(center_sums, cluster_iter, dim_iter, dimensions)/cluster_sizes[cluster_iter] + 0.5);
+                    floor(array_load<float>(center_sums, cluster_iter, dim_iter, dimensions)/cluster_sizes[cluster_iter] + 0.5f);
             }
         }
         return;

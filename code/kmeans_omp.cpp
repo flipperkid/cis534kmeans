@@ -27,21 +27,21 @@ int kmeans_omp(uchar *particle_data, float *centers, int particle_count, int dim
         start_timer( 1 );
         #pragma omp parallel for
         for (int particle_iter = 0; particle_iter < particle_count; particle_iter++) { // TODO parallel for
-            
             // find closest center
-            float min_dist = std::numeric_limits<float>::max();
-            uchar cluster_assignment = std::numeric_limits<uchar>::max();
+            int cluster_assignment = (int)assignments[particle_iter];
+            float min_dist = compute_distance<uchar, float>(particle_data, particle_iter, centers, cluster_assignment, dimensions);
             for (int center_iter = 0; center_iter < cluster_count; center_iter++) {
-                float dist = compute_distance(particle_data, particle_iter, centers, center_iter, dimensions);
-                if (dist < min_dist) {
-                    min_dist = dist;
-                    cluster_assignment = (uchar)center_iter;
+                if( center_iter != cluster_assignment ) {
+                    float dist = compute_distance<uchar, float>(particle_data, particle_iter, centers, center_iter, dimensions);
+                    if (dist < min_dist) {
+                        min_dist = dist;
+                        cluster_assignment = center_iter;
+                    }
                 }
             }
-            
             // assign to closest center
-            if (cluster_assignment != assignments[particle_iter]) {
-                assignments[particle_iter] = cluster_assignment;
+            if (cluster_assignment != (int)assignments[particle_iter]) {
+                assignments[particle_iter] = (uchar)cluster_assignment;
                 assignment_change = true;
             }
         }
@@ -76,7 +76,7 @@ int kmeans_omp(uchar *particle_data, float *centers, int particle_count, int dim
             for (int cluster_iter = 0; cluster_iter < cluster_count; cluster_iter++) {
                 for (int dim_iter = 0; dim_iter < dimensions; dim_iter++) {
                     array_store<float>(centers, cluster_iter, dim_iter, dimensions) =
-                        floor(array_load<float>(centers, cluster_iter, dim_iter, dimensions)/cluster_sizes[cluster_iter] + 0.5);
+                        floor(array_load<float>(centers, cluster_iter, dim_iter, dimensions)/cluster_sizes[cluster_iter] + 0.5f);
                 }
             }
             #pragma omp barrier
@@ -123,7 +123,7 @@ int select_centerspp_omp(uchar *particle_data, int particle_count, int dimension
             // find closest center based on previously calculated centers
             float min_dist = std::numeric_limits<float>::max();
             for (int center_dist_iter = 0; center_dist_iter < center_iter; center_dist_iter++) {
-                float dist = compute_distance(particle_data, particle_iter, centers, center_dist_iter, dimensions);
+                float dist = compute_distance<uchar, float>(particle_data, particle_iter, centers, center_dist_iter, dimensions);
                 if (dist < min_dist) {
                     min_dist = dist;
                 }
@@ -176,18 +176,3 @@ int select_centerspp_omp(uchar *particle_data, int particle_count, int dimension
     return 0;
 }
 
-/**
- * Computes
- * (H_1 - H_C)^2 + (S_1 - S_C)^2 + (V_1 - V_C)^2
- *
- * Maybe should be square root of above?
- */
-/*
-float compute_distance(uchar *particle_data, const int particle_iter, float *centers, const int center_iter, const int dimensions) {
-    float dist = 0;
-    for (int dim_iter = 0; dim_iter < dimensions; dim_iter++) {
-        dist += pow( (float)array_store<uchar>(particle_data, particle_iter, dim_iter, dimensions) - array_load<float>(centers, center_iter, dim_iter, dimensions), 2 );
-    }
-    return dist;
-}
-*/
