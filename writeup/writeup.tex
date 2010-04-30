@@ -54,7 +54,7 @@ Abstract goes where? Abstract goes here!
 \end{abstract}
 
 \begin{keywords}
-k-means, parallel programming
+k-means, k-means++, parallel programming, triangle inequality
 \end{keywords}
 
 \section{Introduction}
@@ -324,19 +324,44 @@ with values of $k$ greater than what is shown, since this would imply that there
 large amount of amount of things to segment, which should only happen in rare cases.
 
 \section{Triangle Inequality}
-Stub \cite{triangle}.
+In an effort to seek further improvements beyond simply optimizing the code to run in parallel,
+the triangle inequality version of k-means by Elkan was implemented. This version of the
+algorithm avoid unnecessary distance calculations by applying the triange inequality in
+two different ways, and by keeping track of lower and upper bounds for distances
+between points and centers \cite{triangle}.
+
+Due to time constraints, the triangle inequality k-means algorithm could only be implemented
+in TBB, but the results of just this version suggests that it is fruitless to pursue an implementation
+in OpenMP given the subpar performance exhibited by the parallel version of the algorithm.
+
+\subsection{Speedup vs. Grain Size}
 
 \includegraphics[width=.90\linewidth]{graph_tri_grain}
 
+\subsection{Speedup vs. Number of Particles}
+
 \includegraphics[width=.90\linewidth]{graph_tri_particle}
+
+\subsection{Speedup vs. Number of Cores}
 
 \includegraphics[width=.90\linewidth]{graph_tri_core}
 
+\subsection{Speedup vs. Number of Clusters}
+
 \includegraphics[width=.90\linewidth]{graph_tri_cluster}
+
+\subsection{Brief Discussion of Results}
 
 \section{Conclusion and Future Steps}
 
 One natural extension to this work is to perform an in-depth analysis of the difference between the TBB and OpenMP code, such as by doing a thorough comparison of the assembly files produced by the TBB and OpenMP versions of the algorithm to see how they are using Intel's SIMD instructions differently. To go even further, the TBB and OpenMP implementations could be hand-tuned to use SSE vectorization, and the performance gains could be measured. Another extension would be to implement the k-means algorithm on a graphics card (for example, with CUDA) and compare its performance to the performances we achieved on the CPU. Some additional experiments would be to use different methods of packing the image data such as cohesive particle or cohesive image channels, to see which works best with the SSE vector instructions, or to use different color spaces or different distance functions on the input image.
+
+\section{Appendix A - Source Code}
+The source code that was used to perform these experiments is available at
+\begin{verbatim}
+https://cis534kmeans.googlecode.com/svn/trunk/
+\end{verbatim}
+via Subversion.
 
 % needed in second column of first page if using \pubid
 %\pubidadjcol

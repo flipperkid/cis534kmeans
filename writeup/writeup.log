@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (MiKTeX 2.8) (preloaded format=latex 2009.10.14)  30 APR 2010 15:16
+This is pdfTeX, Version 3.1415926-1.40.10 (MiKTeX 2.8) (preloaded format=latex 2009.10.14)  30 APR 2010 15:44
 entering extended mode
 **writeup.tex
 
@@ -284,15 +284,21 @@ File: graph_tri_grain.eps Graphic file (type eps)
 <graph_tri_grain.eps>
 File: graph_tri_particle.eps Graphic file (type eps)
  <graph_tri_particle.eps>
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [4]
 File: graph_tri_core.eps Graphic file (type eps)
- <graph_tri_core.eps>
+
+<graph_tri_core.eps>
 File: graph_tri_cluster.eps Graphic file (type eps)
+ <graph_tri_cluster.eps>
+Overfull \hbox (24.0pt too wide) in paragraph at lines 363--363
+[]\OT1/pcr/m/n/10 https://cis534kmeans.googlecode.com/svn/trunk/[] 
+ []
 
-<graph_tri_cluster.eps> [4]
+
 (C:\Users\root\Documents\UPenn\2010__Spring\CIS-534\cis534kmeans\writeup\writeu
-p.bbl) [5
-
-]
+p.bbl) [5]
 (C:\Users\root\Documents\UPenn\2010__Spring\CIS-534\cis534kmeans\writeup\writeu
 p.aux) ) 
 Here is how much of TeX's memory you used:
@@ -302,6 +308,6 @@ Here is how much of TeX's memory you used:
  5688 multiletter control sequences out of 15000+200000
  27064 words of font info for 60 fonts, out of 3000000 for 9000
  14 hyphenation exceptions out of 8191
- 27i,6n,24p,316b,517s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 27i,6n,24p,927b,517s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on writeup.dvi (5 pages, 23784 bytes).
+Output written on writeup.dvi (5 pages, 26432 bytes).
