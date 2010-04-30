@@ -334,6 +334,12 @@ Due to time constraints, the triangle inequality k-means algorithm could only be
 in TBB, but the results of just this version suggests that it is fruitless to pursue an implementation
 in OpenMP given the subpar performance exhibited by the parallel version of the algorithm.
 
+\subsection{Results}
+
+Similar to the results above, the following graphs were peformed on the same respective machines,
+and normalized to the faster serial version of the code. As mentioned above, most of these results
+are subpar, and are not faster than the parallelized version of standard algorithm.
+
 \subsection{Speedup vs. Grain Size}
 
 \includegraphics[width=.90\linewidth]{graph_tri_grain}
@@ -351,6 +357,17 @@ in OpenMP given the subpar performance exhibited by the parallel version of the 
 \includegraphics[width=.90\linewidth]{graph_tri_cluster}
 
 \subsection{Brief Discussion of Results}
+The main reason for this lackluster performance is probably because of the effects of cache locality.
+Since arrays are neeeded for the lower and upper bound, and this is proportional to the particle size,
+the triangle inequality variant possesses as least three times the space complexity of the standard
+algorithm. Additionally, to help keeps track of centers, it also needs an additional $k^2$ amount of space.
+
+Based on the graphs, this hypothesis seems to make sense. When grain size varies, additional memory usage
+does not change, and thus produces a constant speedup. However, increasing the number of particles or
+the number of clusters, drastically uses more memory, and this causes poor cache locality. This can
+be seen by the slight inverted U shape. Lastly, by not maintaining a small enough working set, cache
+coherence problems, is also present when speedup vs. the number of cores is compared, since the slope
+of the speedup is less than the standard algorithm.
 
 \section{Conclusion and Future Steps}
 
