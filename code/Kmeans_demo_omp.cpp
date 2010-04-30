@@ -6,7 +6,7 @@
 #include "kmeans.h"
 #include "kmeans_omp.h"
 
-int output_assignments(IplImage *img, uchar *assignments, float *centers, int cluster_count, int particle_count, int dimensions);
+int output_assignments(IplImage *img, uchar *assignments, double *centers, int cluster_count, int particle_count, int dimensions);
 
 int main(int argc, char **argv) {
     if (argc<2) {
@@ -32,7 +32,7 @@ int main(int argc, char **argv) {
     
     // call to kmeans framework
     int cluster_count = 32;
-    float *centers = new float[cluster_count*channels];
+    double *centers = new double[cluster_count*channels];
     uchar *assignments = new uchar[particle_count];
     for( int particle_iter = 0; particle_iter < particle_count; particle_iter++ ) {
         assignments[particle_iter] = UCHAR_MAX;
@@ -53,7 +53,7 @@ int main(int argc, char **argv) {
     return 0;
 }
 
-int output_assignments(IplImage *img, uchar *assignments, float *centers, int cluster_count, int particle_count, int dimensions) {
+int output_assignments(IplImage *img, uchar *assignments, double *centers, int cluster_count, int particle_count, int dimensions) {
     IplImage *tempImg = cvCreateImage( cvSize(cluster_count, 1), 8, 3);
     for( int centers_iter = 0; centers_iter < cluster_count*3; centers_iter++ ) {
         tempImg->imageData[centers_iter] = (char)floor(centers[centers_iter]);
@@ -63,7 +63,7 @@ int output_assignments(IplImage *img, uchar *assignments, float *centers, int cl
     for( int particle_iter = 0; particle_iter < particle_count; particle_iter++ ) {
         int assn = (int)assignments[particle_iter];
         for( int dim_iter = 0; dim_iter < dimensions; dim_iter++ ) {
-//            printf("here %f", array_load<float>(centers, assn, dim_iter, dimensions));
+//            printf("here %f", array_load<double>(centers, assn, dim_iter, dimensions));
             img->imageData[particle_iter*dimensions+dim_iter] = array_load<char>(tempImg->imageData, assn, dim_iter, dimensions);
         }
     }

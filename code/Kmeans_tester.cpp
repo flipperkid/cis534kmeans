@@ -10,7 +10,7 @@
 
 int main(int argc, char **argv) {
     if (argc<6) {
-        printf("Usage: main cluster_count grainsize thread_count scale mode\n\7");
+        printf("Usage: main cluster_count grainsize thread_count scale mode\n", argc);
         exit(0);
     }
     int cluster_count = atoi(argv[1]);
@@ -40,26 +40,20 @@ int main(int argc, char **argv) {
     uchar *data = (uchar *)hsvImg->imageData;
     
     // call to kmeans framework
-    float *centers = new float[cluster_count*channels];
+    double *centers = new double[cluster_count*channels];
     uchar *assignments = new uchar[particle_count];
     for( int particle_iter = 0; particle_iter < particle_count; particle_iter++ ) {
         assignments[particle_iter] = UCHAR_MAX;
     }
 
-    if (!mode.compare("triangle")) {
-        std::cout << "triangle mode\n";
+    if(mode.compare("triangle") == 0) {
         kmeans_tri(data, centers, particle_count, channels, cluster_count, assignments);
     }
-    else if (!mode.compare("tbb")) {
-        std::cout << "tbb mode\n";
+    else if(mode.compare("tbb") == 0) {
         kmeans_tbb( data, centers, particle_count, channels, cluster_count, assignments, grainsize, thread_count );
     }
-    else if (!mode.compare("serial")) {
-        std::cout << "serial mode\n";
+    else if (mode.compare("serial") == 0) {
         kmeans_serial(data, centers, particle_count, channels, cluster_count, assignments);
-    }
-    else {
-        std::cout << "mode not selected\n";
     }
  
     // release memory

@@ -1,21 +1,22 @@
-qsub -m a -M flipperkid@gmail.com -cwd -b y -j y -q core2-quad.q -pe threaded 4 ./script_test.sh 50 1 4
-qsub -m a -M flipperkid@gmail.com -cwd -b y -j y -q core2-quad.q -pe threaded 4 ./script_test.sh 50 2 4
-qsub -m a -M flipperkid@gmail.com -cwd -b y -j y -q core2-quad.q -pe threaded 4 ./script_test.sh 50 4 4
-qsub -m a -M flipperkid@gmail.com -cwd -b y -j y -q core2-quad.q -pe threaded 4 ./script_test.sh 50 8 4
-qsub -m a -M flipperkid@gmail.com -cwd -b y -j y -q core2-quad.q -pe threaded 4 ./script_test.sh 50 16 4
-qsub -m a -M flipperkid@gmail.com -cwd -b y -j y -q core2-quad.q -pe threaded 4 ./script_test.sh 50 32 4
-qsub -m a -M flipperkid@gmail.com -cwd -b y -j y -q core2-quad.q -pe threaded 4 ./script_test.sh 50 64 4
-qsub -m a -M flipperkid@gmail.com -cwd -b y -j y -q core2-quad.q -pe threaded 4 ./script_test.sh 50 128 4
-qsub -m a -M flipperkid@gmail.com -cwd -b y -j y -q core2-quad.q -pe threaded 4 ./script_test.sh 50 256 4
-qsub -m a -M flipperkid@gmail.com -cwd -b y -j y -q core2-quad.q -pe threaded 4 ./script_test.sh 50 512 4
-qsub -m a -M flipperkid@gmail.com -cwd -b y -j y -q core2-quad.q -pe threaded 4 ./script_test.sh 50 1024 4
-qsub -m a -M flipperkid@gmail.com -cwd -b y -j y -q core2-quad.q -pe threaded 4 ./script_test.sh 50 2048 4
-qsub -m a -M flipperkid@gmail.com -cwd -b y -j y -q core2-quad.q -pe threaded 4 ./script_test.sh 50 4096 4
-qsub -m a -M flipperkid@gmail.com -cwd -b y -j y -q core2-quad.q -pe threaded 4 ./script_test.sh 50 8192 4
-qsub -m a -M flipperkid@gmail.com -cwd -b y -j y -q core2-quad.q -pe threaded 4 ./script_test.sh 50 16000 4
-qsub -m a -M flipperkid@gmail.com -cwd -b y -j y -q core2-quad.q -pe threaded 4 ./script_test.sh 50 32000 4
-qsub -m a -M flipperkid@gmail.com -cwd -b y -j y -q core2-quad.q -pe threaded 4 ./script_test.sh 50 64000 4
-qsub -m a -M flipperkid@gmail.com -cwd -b y -j y -q core2-quad.q -pe threaded 4 ./script_test.sh 50 128000 4
-qsub -m a -M flipperkid@gmail.com -cwd -b y -j y -q core2-quad.q -pe threaded 4 ./script_test.sh 50 256000 4
-qsub -m a -M flipperkid@gmail.com -cwd -b y -j y -q core2-quad.q -pe threaded 4 ./script_test.sh 50 512000 4
-qsub -m a -M flipperkid@gmail.com -cwd -b y -j y -q core2-quad.q -pe threaded 4 ./script_test.sh 50 1024000 4
+qsub -m a -M flipperkid@gmail.com -cwd -b y -j y -q core2-quad.q -pe threaded 4 ./script_test.sh 150 1 4 1.0 tbb
+qsub -m a -M flipperkid@gmail.com -cwd -b y -j y -q core2-quad.q -pe threaded 4 ./script_test.sh 150 2 4 1.0 tbb
+qsub -m a -M flipperkid@gmail.com -cwd -b y -j y -q core2-quad.q -pe threaded 4 ./script_test.sh 150 4 4 1.0 tbb
+qsub -m a -M flipperkid@gmail.com -cwd -b y -j y -q core2-quad.q -pe threaded 4 ./script_test.sh 150 8 4 1.0 tbb
+qsub -m a -M flipperkid@gmail.com -cwd -b y -j y -q core2-quad.q -pe threaded 4 ./script_test.sh 150 16 4 1.0 tbb
+qsub -m a -M flipperkid@gmail.com -cwd -b y -j y -q core2-quad.q -pe threaded 4 ./script_test.sh 150 32 4 1.0 tbb
+qsub -m a -M flipperkid@gmail.com -cwd -b y -j y -q core2-quad.q -pe threaded 4 ./script_test.sh 150 64 4 1.0 tbb
+qsub -m a -M flipperkid@gmail.com -cwd -b y -j y -q core2-quad.q -pe threaded 4 ./script_test.sh 150 128 4 1.0 tbb
+qsub -m a -M flipperkid@gmail.com -cwd -b y -j y -q core2-quad.q -pe threaded 4 ./script_test.sh 150 256 4 1.0 tbb
+qsub -m a -M flipperkid@gmail.com -cwd -b y -j y -q core2-quad.q -pe threaded 4 ./script_test.sh 150 512 4 1.0 tbb
+qsub -m a -M flipperkid@gmail.com -cwd -b y -j y -q core2-quad.q -pe threaded 4 ./script_test.sh 150 1024 4 1.0 tbb
+qsub -m a -M flipperkid@gmail.com -cwd -b y -j y -q core2-quad.q -pe threaded 4 ./script_test.sh 150 2048 4 1.0 tbb
+qsub -m a -M flipperkid@gmail.com -cwd -b y -j y -q core2-quad.q -pe threaded 4 ./script_test.sh 150 4096 4 1.0 tbb
+qsub -m a -M flipperkid@gmail.com -cwd -b y -j y -q core2-quad.q -pe threaded 4 ./script_test.sh 150 8192 4 1.0 tbb
+qsub -m a -M flipperkid@gmail.com -cwd -b y -j y -q core2-quad.q -pe threaded 4 ./script_test.sh 150 16000 4 1.0 tbb
+qsub -m a -M flipperkid@gmail.com -cwd -b y -j y -q core2-quad.q -pe threaded 4 ./script_test.sh 150 32000 4 1.0 tbb
+qsub -m a -M flipperkid@gmail.com -cwd -b y -j y -q core2-quad.q -pe threaded 4 ./script_test.sh 150 64000 4 1.0 tbb
+qsub -m a -M flipperkid@gmail.com -cwd -b y -j y -q core2-quad.q -pe threaded 4 ./script_test.sh 150 128000 4 1.0 tbb
+qsub -m a -M flipperkid@gmail.com -cwd -b y -j y -q core2-quad.q -pe threaded 4 ./script_test.sh 150 256000 4 1.0 tbb
+qsub -m a -M flipperkid@gmail.com -cwd -b y -j y -q core2-quad.q -pe threaded 4 ./script_test.sh 150 512000 4 1.0 tbb
+qsub -m a -M flipperkid@gmail.com -cwd -b y -j y -q core2-quad.q -pe threaded 4 ./script_test.sh 150 1024000 4 1.0 tbb
+
