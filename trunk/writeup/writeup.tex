@@ -51,7 +51,7 @@ Abstract goes where? Abstract goes here!
 \end{abstract}
 
 \begin{keywords}
-k-means, parallel programming.
+k-means, parallel programming
 \end{keywords}
 
 \section{Introduction}
@@ -193,8 +193,8 @@ The fastest serial version was compiled GCC version 4.3.2 with maximum optimizat
 unrolled (-funroll-all-loops). Additionally, cluster size is held constant at $k=50$ for all experiments
 except the last one which determines optimal cluster size.
 
-All runtime experiments were performed on the SEAS acgrid clusters. The machines we chose have
-4 distinct cores that can run at least 4 hardware threads at a time. The image that we chose was
+All runtime experiments were performed on the SEAS acgrid30 - acgrid32 clusters, unless mentioned otherwise.
+The machines we chose have 4 distinct cores that can run at least 4 hardware threads at a time. The image that we chose was
 of the town of Porto Moniz with a resolution of $1280 \times 800$ pixels. This equates to
 1,024,000 pixels.
 
@@ -226,14 +226,29 @@ TBB and and a decrease to the maximum theoretical linear speedup for OpenMP.
 
 \includegraphics[width=1\linewidth]{graph_best_time_vs_particle_size}
 
+Since all the previous graphs were in terms of normalized speedups,
+this graph was included to give a sense of runtimes on four cores.
+This graph shows that run-time linearly scales with particle size with
+OpenMP producing better results.
+
 \subsection{Speedup vs. Number of Cores}
+
+\includegraphics[width=1\linewidth]{graph_cores}
+
+Experimentation shows that TBB scales fairly linearly with the number of cores,
+achieving a near linear speedup. However, OpenMP levels out at around 4.0, and shows
+no further improvement.
+
 \subsection{Speedup vs. Number of Clusters}
 
 \section{Discussion of Results}
 
 \subsection{Speedup vs. Grain Size}
+
 \subsection{Speedup vs. Number of Particles}
+
 \subsection{Speedup vs. Number of Cores}
+
 \subsection{Speedup vs. Number of Clusters}
 
 \section{Conclusion}
