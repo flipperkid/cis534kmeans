@@ -6,6 +6,7 @@
 #include <highgui.h>
 #include "kmeans.h"
 #include "kmeans_tri.h"
+#include "kmeans_tritbb.h"
 #include "kmeans_tbb.h"
 #include "kmeans_omp.h"
 
@@ -47,11 +48,14 @@ int main(int argc, char **argv) {
         assignments[particle_iter] = UCHAR_MAX;
     }
 
-    if(!mode.compare("triangle") == 0) {
+    if(!mode.compare("triangle")) {
         kmeans_tri(data, centers, particle_count, channels, cluster_count, assignments);
     }
-    else if(!mode.compare("tbb") == 0) {
+    else if(!mode.compare("tbb")) {
         kmeans_tbb( data, centers, particle_count, channels, cluster_count, assignments, grainsize, thread_count );
+    }
+    else if(!mode.compare("tritbb")) {
+        kmeans_tritbb( data, centers, particle_count, channels, cluster_count, assignments, grainsize, thread_count );
     }
     else if (!mode.compare("openmp")) {
         std::cout << "OpenMP mode\n";
