@@ -1,7 +1,9 @@
 #include "kmeans.h"
 #include "kmeans_omp.h"
 
-int kmeans_omp(uchar *particle_data, double *centers, int particle_count, int dimensions, int cluster_count, uchar *assignments, int grainSize) {
+int kmeans_omp(uchar *particle_data, double *centers, int particle_count, int dimensions, int cluster_count, uchar *assignments, int grainSize, int thread_count) {
+    omp_set_num_threads(thread_count);
+
     reset_timer( 1 );
     reset_timer( 2 );
     reset_timer( 3 );
@@ -10,10 +12,18 @@ int kmeans_omp(uchar *particle_data, double *centers, int particle_count, int di
     // assign centers
     int *cluster_sizes = new int[cluster_count];
     start_timer( 4 );
+    /*
     if (select_centerspp_omp(particle_data, particle_count, dimensions, cluster_count, centers) != 0 ) {
         printf("Error selecting centers");
         return -1;
     }
+    */
+    // assign centers
+    if (select_centers_serial(particle_data, particle_count, dimensions, cluster_count, centers) != 0 ) {
+        printf("Error selecting centers");
+        return -1;
+    }
+
     stop_timer( 4 );
 
     // iterate until clusters converge
@@ -163,7 +173,6 @@ int select_centerspp_omp(uchar *particle_data, int particle_count, int dimension
         for (int particle_iter = 0; particle_iter < particle_count; particle_iter++) {  // TODO search - make binary, parallelize (note break, tricky)
             if (particle_distr[particle_iter] > select_pos * distr_ratio) {
                 particle_select = particle_iter;
-                break;
             }
         }
         stop_timer(6);

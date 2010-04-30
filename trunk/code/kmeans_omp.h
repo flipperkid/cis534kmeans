@@ -32,7 +32,7 @@ inline T array_load(const T *arr, const int main_iter, const int sub_iter, const
 }
 */
 
-int kmeans_omp(uchar *data, double *centers, int particle_count, int dimensions, int cluster_count, uchar *assignments, int grainSize);
+int kmeans_omp(uchar *data, double *centers, int particle_count, int dimensions, int cluster_count, uchar *assignments, int grainSize, int thread_count);
 
 // int select_centers_omp(uchar *data, int particle_count, int dimensions, int cluster_count, double *centers);
 int select_centerspp_omp(uchar *data, int particle_count, int dimensions, int cluster_count, double *centers);
