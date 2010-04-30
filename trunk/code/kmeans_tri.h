@@ -13,11 +13,11 @@ template <typename T> inline T _MAX(T val1, T val2) {
     return val2;
 }
 
-int kmeans_tri(uchar *data, float *&centers, int particle_count, int dimensions, int cluster_count, uchar *assignments);
-void step1_tri( uchar *particle_data, float *centers, int particle_count, int cluster_count, uchar *assignments, int dimensions, bool &assignment_change, 
-                float *lbound, float *ubound, bool *ubound_invalid, float **center_dists, float *short_dist );
-void step2_tri( uchar *particle_data, float *&centers, float *&means_new, float *center_shift, int *cluster_sizes, int particle_count, int cluster_count, uchar *assignments, int dimensions, 
-                float *lbound, float *ubound, bool *ubound_invalid );
+int kmeans_tri(uchar *data, double *&centers, int particle_count, int dimensions, int cluster_count, uchar *assignments);
+void step1_tri( uchar *particle_data, double *centers, int particle_count, int cluster_count, uchar *assignments, int dimensions, bool &assignment_change, 
+                double *lbound, double *ubound, bool *ubound_invalid, double **center_dists, double *short_dist );
+void step2_tri( uchar *particle_data, double *&centers, double *&means_new, double *center_shift, int *cluster_sizes, int particle_count, int cluster_count, uchar *assignments, int dimensions, 
+                double *lbound, double *ubound, bool *ubound_invalid );
 
 #endif
 

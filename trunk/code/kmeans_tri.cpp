@@ -1,34 +1,39 @@
 #include "kmeans_tri.h"
 
-int kmeans_tri(uchar *particle_data, float *&centers, int particle_count, int dimensions, int cluster_count, uchar *assignments) {
+int kmeans_tri(uchar *particle_data, double *&centers, int particle_count, int dimensions, int cluster_count, uchar *assignments) {
     reset_timer( 1 );
     reset_timer( 2 );
     reset_timer( 3 );
+    reset_timer( 4 );
+    reset_timer( 5 );
+    start_timer( 5 );
 //    srand( time(NULL) );
-    float *lbound = new float[particle_count*cluster_count];
+    double *lbound = new double[particle_count*cluster_count];
     for( int lbound_iter = 0; lbound_iter < particle_count*cluster_count; lbound_iter++ ) {
         lbound[lbound_iter] = 0;
     }
-    float *ubound = new float[particle_count];
+    double *ubound = new double[particle_count];
     bool *ubound_invalid = new bool[particle_count];
     for( int ubound_iter = 0; ubound_iter < particle_count; ubound_iter++ ) {
-        ubound[ubound_iter] = std::numeric_limits<float>::max();
+        ubound[ubound_iter] = std::numeric_limits<double>::max();
         ubound_invalid[ubound_iter] = false;
     }
-    float **center_dists = new float*[cluster_count];
+    double **center_dists = new double*[cluster_count];
     for( int center_iter = 0; center_iter < cluster_count; center_iter++ ) {
-        center_dists[center_iter] = new float[cluster_count];
+        center_dists[center_iter] = new double[cluster_count];
     }
-    float *short_dist = new float[cluster_count];
-    float *means_new = new float[cluster_count*dimensions];
-    float *center_shift = new float[cluster_count];
+    double *short_dist = new double[cluster_count];
+    double *means_new = new double[cluster_count*dimensions];
+    double *center_shift = new double[cluster_count];
 
     // assign centers
     int *cluster_sizes = new int[cluster_count];
-    if (select_centers_serial(particle_data, particle_count, dimensions, cluster_count, centers) != 0 ) {
+    start_timer( 4 );
+    if (select_centerspp_serial(particle_data, particle_count, dimensions, cluster_count, centers) != 0 ) {
         printf("Error selecting centers");
         return -1;
     }
+    stop_timer( 4 );
 
     // iterate until clusters converge
     start_timer( 3 );
@@ -51,11 +56,6 @@ int kmeans_tri(uchar *particle_data, float *&centers, int particle_count, int di
         iterations++;
     }
     stop_timer( 3 );
-
-    printf("Step1: %f seconds, %d particles, %d clusters, %d dimensions, %d iterations, 1 threads\n", get_time_elapsed( 1 ), particle_count, cluster_count, dimensions, iterations);
-    printf("Step2: %f seconds, %d particles, %d clusters, %d dimensions, %d iterations, 1 threads\n", get_time_elapsed( 2 ), particle_count, cluster_count, dimensions, iterations);
-    printf("Total: %f seconds, %d particles, %d clusters, %d dimensions, %d iterations, 1 threads\n", get_time_elapsed( 3 ), particle_count, cluster_count, dimensions, iterations);
-
     // release memory
     delete [] cluster_sizes;
     delete [] means_new;
@@ -65,18 +65,24 @@ int kmeans_tri(uchar *particle_data, float *&centers, int particle_count, int di
     delete [] ubound_invalid;
     delete [] center_dists;
     delete [] short_dist;
+    stop_timer( 5 );
+    printf("Initialization: %f seconds, %d particles, %d clusters, %d dimensions, %d iterations, 1 threads\n", get_time_elapsed( 4 ), particle_count, cluster_count, dimensions, iterations);
+    printf("Step1: %f seconds, %d particles, %d clusters, %d dimensions, %d iterations, 1 threads\n", get_time_elapsed( 1 ), particle_count, cluster_count, dimensions, iterations);
+    printf("Step2: %f seconds, %d particles, %d clusters, %d dimensions, %d iterations, 1 threads\n", get_time_elapsed( 2 ), particle_count, cluster_count, dimensions, iterations);
+    printf("Convergence: %f seconds, %d particles, %d clusters, %d dimensions, %d iterations, 1 threads\n", get_time_elapsed( 3 ), particle_count, cluster_count, dimensions, iterations);
+    printf("Total: %f seconds, %d particles, %d clusters, %d dimensions, %d iterations, 1 threads\n", get_time_elapsed( 5 ), particle_count, cluster_count, dimensions, iterations);
     return 0;
 }
 
-void step1_tri( uchar *particle_data, float *centers, int particle_count, int cluster_count, uchar *assignments, int dimensions, bool &assignment_change, 
-                float *lbound, float *ubound, bool *ubound_invalid, float **center_dists, float *short_dist ) {
+void step1_tri( uchar *particle_data, double *centers, int particle_count, int cluster_count, uchar *assignments, int dimensions, bool &assignment_change, 
+                double *lbound, double *ubound, bool *ubound_invalid, double **center_dists, double *short_dist ) {
     // Precompute distance between centers
     for( int cluster_iter = 0; cluster_iter < cluster_count; cluster_iter++) {
-        short_dist[cluster_iter] = std::numeric_limits<float>::max();
+        short_dist[cluster_iter] = std::numeric_limits<double>::max();
     }
     for( int cluster_iter1 = 0; cluster_iter1 < cluster_count; cluster_iter1++) {
         for( int cluster_iter2 = cluster_iter1+1; cluster_iter2 < cluster_count; cluster_iter2++) {
-            float dist = 0.25f*compute_distance<float, float>(centers, cluster_iter1, centers, cluster_iter2, dimensions);
+            double dist = 0.25f*compute_distance<double, double>(centers, cluster_iter1, centers, cluster_iter2, dimensions);
             center_dists[cluster_iter1][cluster_iter2] = dist;
             center_dists[cluster_iter2][cluster_iter1] = dist;
             if(dist < short_dist[cluster_iter1]) {
@@ -94,9 +100,9 @@ void step1_tri( uchar *particle_data, float *centers, int particle_count, int cl
             for( int center_iter = 0; center_iter < cluster_count; center_iter++ ) {
                 if( center_iter != cluster_assignment && ( ubound[particle_iter] > array_load(lbound, particle_iter, center_iter, cluster_count) ||
                     ubound[particle_iter] > center_dists[center_iter][cluster_assignment] ) ) {
-                    float dist;
+                    double dist;
                     if( ubound_invalid[particle_iter] ) {
-                        dist = compute_distance<uchar, float>(particle_data, particle_iter, centers, cluster_assignment, dimensions);
+                        dist = compute_distance<uchar, double>(particle_data, particle_iter, centers, cluster_assignment, dimensions);
                         ubound[particle_iter] = dist;
                         array_store(lbound, particle_iter, cluster_assignment, cluster_count) = dist;
                         ubound_invalid[particle_iter] = false;
@@ -105,7 +111,7 @@ void step1_tri( uchar *particle_data, float *centers, int particle_count, int cl
                         dist = ubound[particle_iter];
                     }
                     if( dist > array_load(lbound, particle_iter, center_iter, cluster_count) || dist > center_dists[center_iter][cluster_assignment] ) {
-                        float dist_new = compute_distance<uchar, float>(particle_data, particle_iter, centers, center_iter, dimensions);
+                        double dist_new = compute_distance<uchar, double>(particle_data, particle_iter, centers, center_iter, dimensions);
                         array_store(lbound, particle_iter, center_iter, cluster_count) = dist_new;
                         if( dist_new < dist ) {
                             cluster_assignment = center_iter;
@@ -123,12 +129,12 @@ void step1_tri( uchar *particle_data, float *centers, int particle_count, int cl
     }
 }
 
-void step2_tri( uchar *particle_data, float *&centers, float *&means_new, float *center_shift, int *cluster_sizes, int particle_count, int cluster_count, uchar *assignments, int dimensions, 
-                float *lbound, float *ubound, bool *ubound_invalid ) {
+void step2_tri( uchar *particle_data, double *&centers, double *&means_new, double *center_shift, int *cluster_sizes, int particle_count, int cluster_count, uchar *assignments, int dimensions, 
+                double *lbound, double *ubound, bool *ubound_invalid ) {
     // initialize centers to 0
     for (int cluster_iter = 0; cluster_iter < cluster_count; cluster_iter++) {
         for (int dim_iter = 0; dim_iter < dimensions; dim_iter++) {
-            array_store<float>(means_new, cluster_iter, dim_iter, dimensions) = 0;
+            array_store<double>(means_new, cluster_iter, dim_iter, dimensions) = 0;
         }
     }
     for (int cluster_iter = 0; cluster_iter < cluster_count; cluster_iter++) {
@@ -139,27 +145,27 @@ void step2_tri( uchar *particle_data, float *&centers, float *&means_new, float 
         int cluster_assignment = (int)assignments[particle_iter];
         cluster_sizes[cluster_assignment]++;
         for (int dim_iter = 0; dim_iter < dimensions; dim_iter++) {
-            array_store<float>(means_new, cluster_assignment, dim_iter, dimensions) += (float)array_load<uchar>(particle_data, particle_iter, dim_iter, dimensions);
+            array_store<double>(means_new, cluster_assignment, dim_iter, dimensions) += (double)array_load<uchar>(particle_data, particle_iter, dim_iter, dimensions);
         }
     }
     // divide by number of assigned particles to get mean
     for (int cluster_iter = 0; cluster_iter < cluster_count; cluster_iter++) {
         for (int dim_iter = 0; dim_iter < dimensions; dim_iter++) {
-            array_store<float>(means_new, cluster_iter, dim_iter, dimensions) = floor(array_load<float>(means_new, cluster_iter, dim_iter, dimensions)/cluster_sizes[cluster_iter] + 0.5f);
+            array_store<double>(means_new, cluster_iter, dim_iter, dimensions) = floor(array_load<double>(means_new, cluster_iter, dim_iter, dimensions)/cluster_sizes[cluster_iter] + 0.5f);
         }
     }
     for (int center_iter = 0; center_iter < cluster_count; center_iter++) {
-        center_shift[center_iter] = compute_distance<float, float>(means_new, center_iter, centers, center_iter, dimensions);
+        center_shift[center_iter] = compute_distance<double, double>(means_new, center_iter, centers, center_iter, dimensions);
     }
     for( int particle_iter = 0; particle_iter < particle_count; particle_iter++ ) {
         for( int center_iter = 0; center_iter < cluster_count; center_iter++ ) {
-            array_store(lbound, particle_iter, center_iter, cluster_count) = _MAX<float>(0, array_load(lbound, particle_iter, center_iter, cluster_count) - 
-                center_shift[center_iter] - 2*sqrt(array_load(lbound, particle_iter, center_iter, cluster_count))*sqrt(center_shift[center_iter]));
+            array_store(lbound, particle_iter, center_iter, cluster_count) = _MAX<double>(0, array_load(lbound, particle_iter, center_iter, cluster_count) - 
+                center_shift[center_iter] - 2*sqrt(array_load(lbound, particle_iter, center_iter, cluster_count)*center_shift[center_iter]));
         }
-        ubound[particle_iter] = ubound[particle_iter] + center_shift[(int)(assignments[particle_iter])] + 2*sqrt(ubound[particle_iter])*sqrt(center_shift[(int)(assignments[particle_iter])]);
+        ubound[particle_iter] = ubound[particle_iter] + center_shift[(int)(assignments[particle_iter])] + 2*sqrt(ubound[particle_iter]*center_shift[(int)(assignments[particle_iter])]);
         ubound_invalid[particle_iter] = true;
     }
-    float *temp = centers;
+    double *temp = centers;
     centers = means_new;
     means_new = temp;
 }

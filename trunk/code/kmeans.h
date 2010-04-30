@@ -25,10 +25,10 @@ template <typename T> inline T array_load(const T *arr, const int main_iter, con
     return arr[main_iter*sub_count+sub_iter];
 }
 
-int kmeans_serial(uchar *data, float *centers, int particle_count, int dimensions, int cluster_count, uchar *assignments);
+int kmeans_serial(uchar *data, double *centers, int particle_count, int dimensions, int cluster_count, uchar *assignments);
 
-int select_centers_serial(uchar *data, int particle_count, int dimensions, int cluster_count, float *centers);
-int select_centerspp_serial(uchar *data, int particle_count, int dimensions, int cluster_count, float *centers);
+int select_centers_serial(uchar *data, int particle_count, int dimensions, int cluster_count, double *centers);
+int select_centerspp_serial(uchar *data, int particle_count, int dimensions, int cluster_count, double *centers);
 
 /**
  * Computes
@@ -36,10 +36,10 @@ int select_centerspp_serial(uchar *data, int particle_count, int dimensions, int
  *
  * Maybe should be square root of above?
  */
-template <typename T1, typename T2> inline float compute_distance(T1 *particle_data, const int particle_iter, T2 *centers, const int center_iter, const int dimensions) {
-    float dist = 0;
+template <typename T1, typename T2> inline double compute_distance(T1 *particle_data, const int particle_iter, T2 *centers, const int center_iter, const int dimensions) {
+    double dist = 0;
     for (int dim_iter = 0; dim_iter < dimensions; dim_iter++) {
-        dist += pow( (float)array_store<T1>(particle_data, particle_iter, dim_iter, dimensions) - (float)array_load<T2>(centers, center_iter, dim_iter, dimensions), 2 );
+        dist += pow( (double)array_store<T1>(particle_data, particle_iter, dim_iter, dimensions) - (double)array_load<T2>(centers, center_iter, dim_iter, dimensions), 2 );
     }
     return dist;
 }
