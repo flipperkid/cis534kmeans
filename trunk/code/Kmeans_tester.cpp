@@ -47,12 +47,15 @@ int main(int argc, char **argv) {
     }
 
     if(mode.compare("triangle")) {
+        std::cout << "triangle mode\n";
         kmeans_tri(data, centers, particle_count, channels, cluster_count, assignments);
     }
     else if(mode.compare("tbb")) {
+        std::cout << "tbb mode\n";
         kmeans_tbb( data, centers, particle_count, channels, cluster_count, assignments, grainsize, thread_count );
     }
     else {
+        std::cout << "serial mode\n";
         kmeans_serial(data, centers, particle_count, channels, cluster_count, assignments);
     }
  
