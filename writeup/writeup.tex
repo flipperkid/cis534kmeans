@@ -326,6 +326,14 @@ large amount of amount of things to segment, which should only happen in rare ca
 \section{Triangle Inequality}
 Stub \cite{triangle}.
 
+\includegraphics[width=.90\linewidth]{graph_tri_grain}
+
+\includegraphics[width=.90\linewidth]{graph_tri_particle}
+
+\includegraphics[width=.90\linewidth]{graph_tri_core}
+
+\includegraphics[width=.90\linewidth]{graph_tri_cluster}
+
 \section{Conclusion and Future Steps}
 
 One natural extension to this work is to perform an in-depth analysis of the difference between the TBB and OpenMP code, such as by doing a thorough comparison of the assembly files produced by the TBB and OpenMP versions of the algorithm to see how they are using Intel's SIMD instructions differently. To go even further, the TBB and OpenMP implementations could be hand-tuned to use SSE vectorization, and the performance gains could be measured. Another extension would be to implement the k-means algorithm on a graphics card (for example, with CUDA) and compare its performance to the performances we achieved on the CPU. Some additional experiments would be to use different methods of packing the image data such as cohesive particle or cohesive image channels, to see which works best with the SSE vector instructions, or to use different color spaces or different distance functions on the input image.
