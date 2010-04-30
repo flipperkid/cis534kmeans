@@ -11,7 +11,7 @@
 
 \begin{document}
 % paper title
-\title{Parallelizing k-means}
+\title{Parallelizing k-means for Image Segmentation}
 
 
 % author names and IEEE memberships
@@ -55,36 +55,36 @@ k-means, parallel programming
 \end{keywords}
 
 \section{Introduction}
-\PARstart{T}{he} k-means algorithm groups particles into a fixed number of clusters.
-It has an extraordinary amount of uses including in fields such as
+\PARstart{T}{he} k-means algorithm performs a simple grouping of particles into a fixed number of clusters.
+It has an vast amount of uses in fields such as
 machine learning, computer vision, and network analysis.
 
 In the case of machine learning, it is useful in unsupervised learning methods, 
 dividing data for more specific classifiers, and the selection of of examples for k-nearest neighbors.
 
-For computer vision, one frequest task is to segment images using the difference in pixel intensity as a distance
-metric. One can then use the k-means algorithm to do the above and estimate object boundaries, or use it as a cue for other algorithms
+For computer vision, one frequent task is to segment images using the difference in pixel intensity as a distance
+metric. One can then use the k-means algorithm to estimate object boundaries, or use it as a cue for other algorithms
 that perform object recognition.
 
-Additinally, the use of k-means is not limited to just images, in network analysis it can be used to find communities.
+Additionally, the use of k-means is not limited only to images. In network analysis it can be used to find communities.
 
-However, in this paper, we will focus on the problem of image segmentation, in which which we will try to tune the code
+However, in this paper, we will focus on the problem of image segmentation, towards which we will try to tune the code
 to run as fast as possible.
 
 \section{Analysis of Algorithm}
-Before focusing on the acutal implementation, the k-means algorithm
+Before focusing on the actual implementation, the k-means algorithm
 was examined to see what sections could be effectively parallelized.
 
 \subsection{\textit{k-means}}
 The k-means algorithm basically consists of three steps:
-choosing $k$ intial clusters, an assignment step, and an
-update step. In the assignement step, particles get assigned
+choosing $k$ initial clusters, an assignment step, and an
+update step. In the assignment step, particles get assigned
 to clusters. In the update step, the new mean of a cluster
-is recomputed by the making the average of all the values
-of the particles in a cluster.
+is recomputed by taking the average of all the values
+of the particles in that cluster.
 
 \begin{algorithm}
-\caption{k-means++ algorithm}
+\caption{naive k-means algorithm}
 \begin{algorithmic}[1]
 \STATE{choose $k$ initial means as centers}
 \FOR{each particle $p$}
@@ -98,7 +98,7 @@ of the particles in a cluster.
 \ENDFOR
 \FOR{each cluster $c$}
     \STATE{sum $\leftarrow$ 0}
-    \FOR{each partice $p$ in $c$}
+    \FOR{each particle $p$ in $c$}
         \STATE{sum $\leftarrow$ sum $+$ p}
     \ENDFOR
     \STATE{new mean of cluster $c$ $\leftarrow$ sum / $|c|$}
@@ -107,33 +107,33 @@ of the particles in a cluster.
 \end{algorithmic}
 \end{algorithm}
 
-An initial and precursory glance at the algorithm indicates that there are parts that are
+An initial cursory glance at the algorithm indicates that there are parts that are
 easy to parallelize.
 
 The initial steps for choosing $k$ can be done in any fashion, and since they are not
 dependent on each other, can simply be randomly chosen in parallel.
 
 The second step, the assignment step, is the time dominating factor in the calculation since
-it is $O(kn)$ due to the fact that for every particle, it must consider every $k$-clusters.
+it is $O(kn)$ due to the fact that for every particle, each of the $k$-clusters must be considered.
 Nevertheless, since the inner for loop and assignment is independent of every other iteration,
-it is an example of ``embarrassingly'' parallel programming, and as such using a parallel for
-loop construct is enough to evenly distribute the work between $n$ number of processors.
+it is an example of ``embarrassingly'' parallel programming, and as such using a \emph{parallel for}
+loop construct is enough to evenly distribute the work between $n$ processors.
 
-For the third step, the update step, a parallel reduce was used to sum up the values of the particles
-before perform a division to get the mean. While it is also possible to use a parallel for construct
+For the third step, the update step, a \emph{parallel reduce} was used to sum up the values of the particles
+before performing a division to determine the mean. While it is also possible to use a \emph{parallel for} construct
 over the outer for loop, it does not scale well if $k$ is smaller than the number of processors.
-A parallel reduce would almost always utilize the processors fully since the number particles usually
-outnumber the number processors.
+A \emph{parallel reduce} would almost always utilize the processors fully since the number of particles usually
+outnumbers the number of processors.
 
 \subsection{k-means++}
-While the original algorithms runs fine by randomly choosing \textit{k}-clusters
-as the initial clusters, it has been shown that the worst case running time
-can be super-polynomial. By using the k-means++ algorithm to choose initial
-starting clusters, the algorithm is guaranteed a solution that is O(log k)
-competitive to the optimal k-means solution.
+While the runtime of the original algorithm where the initial \textit{k}-clusters are randomly chosen is acceptable
+, it has been shown that the worst case running time
+can be super-polynomial. By using the k-means++ algorithm to choose the initial
+starting clusters, the algorithm is guaranteed a solution that is within a factor of $O(log k)$
+to the optimal k-means solution.
 
-The fundamental idea of the k-means++ algorithm is to prevent clusters from being to close together
-and spread out where the clusters are.
+The fundamental idea of the k-means++ algorithm is to prevent clusters from being too close together
+by spreading out the assignment of clusters.
 
 \begin{algorithm}
 \caption{k-means++ algorithm}
@@ -148,53 +148,53 @@ and spread out where the clusters are.
 \end{algorithmic}
 \end{algorithm}
 
-Similar to the regular k-means algorithm, the time dominant step for k-means++ is the first step
-since for every particle, one must also iterate over every cluster. Since the computation of
-finding which cluster has the minimum distance to a particle is independent of one another,
-a parallel for loop would suffice in efficiently parallelizing the section of the code.
+Similar to the naive k-means algorithm, the time dominant step for k-means++ is the first step
+since for every particle, an iteration must be performed for every cluster. Since the computations of
+finding which cluster has the minimum distance to a given particle are independent of one another,
+a \emph{parallel for} loop would suffice in efficiently parallelizing this section of the code.
 
 The second part of the algorithm, which involves a prefix sum over an
-array ofshortest distances to a known center, can be implemented as a parallel prefix scan.
+array of shortest distances to a known center, can be implemented as a parallel prefix scan.
 
 \section{Implementation}
 
-In order to implement parallelization in the k-means program, we chose the
-Intel's Threading Building Block (TBB) framework since all the necessary parallel primitives
-desired are present. By utilizing TBB, the programmer does not become concerned with
-low-level thread management since it is automatically managed by a scheduler.
-The only variable in the TBB that we which to tune is the grain size for the parallel\_for
-construct, since this a determinant of total run time.
+In order to implement parallelization in the k-means program, we chose
+Intel's Threading Building Block (TBB) framework since all the necessary parallel constructs
+desired are present. TBB removes the need for the programmer to be concerned with
+low-level thread management since this is automatically managed by a scheduler.
+The only variable in the TBB implementation that we wish to tune is the grain size for the \emph{parallel\_for}
+construct, since this has an effect on the total run time.
 
-Because of the decision to use TBB, C++ had to be used by default as a programming language since
-the TBB primitives expects to interface with classes as primitives. Although overhead should be minimal,
-C++ class constructors and destructors might contribute slightly to runtime.
+Because of the decision to use TBB, the C++ programming language had to be chosen instead of C, since
+the interface to TBB constructs is a body class. Although class overhead is probably minimal,
+C++ class constructors and destructors may contribute slightly to the runtime over a parallel implementation in C.
 
 In addition to using TBB, we also decided to implement k-means using OpenMP as a baseline for comparison.
 Determining whether TBB possessed some form of overhead was an important goal, and since OpenMP is
-implemented in every major compiler, it would also be interesting what sort of performance one could
-get without using a specialized libarary.
+implemented in every major C/C++ compiler, it would also be interesting what sort of performance one could
+get without using a specialized library.
 
 In order to determine the effectiveness of parallelization, several experiments regarding
-grain size, paricle size, core size, and cluster size were run. Determining the optimal grain size
-is important since an improper grain size might create unnecessary (if too small) or not be able
+grain size, particle size, core size, and cluster size were run. Determining the optimal grain size
+is important since an improper grain size may create unnecessary tasks (if too small) or be unable
 to fully utilize the total number of cores (if too large). Particle size is also important since
-this has implications of what resolutions today's technology can process at a reasonable speed.
+it has implications towards what image resolutions today's technology can process at a reasonable speed.
 If a certain response time is desired of a machine vision program, it might become necessary
-to down-sample images received. Another aspect of interests regarding this algorithm is the
-number of processors. At what point would one start seeing the benefits of parallelization?
-Would one expect a linear speedup to an infinitie number of processors? Lastly, we would like
-to answer what an efficient cluster size would be. If an image has too many objects that need
-to be segmented, would the algorithm become unusable? Also, is the inverse true?
+to down-sample images received. Another aspect of interest regarding this algorithm is the
+number of processors. At what point would we start seeing the benefits of parallelization?
+Would we expect a linear speedup on an infinite number of processors? Finally, we would like
+to answer the question of what an efficient cluster size would be. If an image has too many objects that need
+to be segmented, would the algorithm become unusable? What about too few objects?
 
 \section{Results}
 
-In this section, all graphs all normalized to the fastest serial version, unless mentioned otherwise.
-The fastest serial version was compiled GCC version 4.3.2 with maximum optimization (-O3) and loops
+In this section, all graphs are normalized to the fastest serial version, unless mentioned otherwise.
+The fastest serial version was compiled with GCC version 4.3.2 with maximum optimization (-O3) and loops
 unrolled (-funroll-all-loops). Additionally, cluster size is held constant at $k=50$ for all experiments
-except the last one which determines optimal cluster size.
+except the final experiment where optimal cluster size is determined.
 
-All runtime experiments were performed on the SEAS acgrid30 - acgrid32 clusters, unless mentioned otherwise.
-The machines we chose have 4 distinct cores that can run at least 4 hardware threads at a time. The image that we chose was
+All runtime experiments were performed on the SEAS acgrid30 - acgrid32 4-core Core2 x86 cluster machines, unless mentioned otherwise.
+The machines we chose have 4 distinct cores that can run up to 4 hardware threads at a time. The image that we chose was
 of the town of Porto Moniz with a resolution of $1280 \times 800$ pixels. This equates to
 1,024,000 pixels.
 
@@ -208,10 +208,10 @@ of the town of Porto Moniz with a resolution of $1280 \times 800$ pixels. This e
 
 \includegraphics[width=.90\linewidth]{graph_grainsize}
 
-As expected, TBB produce a somewhat ideal speedup until grain size got too large for to be evenly
-distributed evenly over the number of cores. Surprisingly, OpenMP exhibits super-linear speedup
-with the static and dynamic scheduler. Either the grainsize configuration didn't work, or
-static values were prechosen, since varying grain size did not significantly affect grainsize.
+As expected, TBB produces a somewhat ideal speedup until the grain size became too large to be evenly
+distributed over the number of cores. Surprisingly, OpenMP exhibits super-linear speedup
+with the static and dynamic scheduler. Either the grainsize configuration did not work, or
+static values were pre-chosen, since varying grain size did not significantly affect grainsize.
 
 \subsection{Speedup vs. Number of Particles}
 
@@ -222,14 +222,14 @@ In this experiment, we scaled the above image to vary the number of particles.
 When the speedup is compared to the particle size, a particle size that is
 too small results in a sub-optimal speedup. However, as the particle size
 gets larger to more reasonable values, the speedup remains fairly linear for
-TBB and and a decrease to the maximum theoretical linear speedup for OpenMP.
+TBB while the speedup for OpenMP decreases from the maximum theoretical linear speedup.
 
 \includegraphics[width=.90\linewidth]{graph_best_time_vs_particle_size}
 
 Since all the previous graphs were in terms of normalized speedups,
 this graph was included to give a sense of runtimes on four cores.
 This graph shows that run-time linearly scales with particle size with
-OpenMP producing better results.
+OpenMP again producing better results.
 
 \subsection{Speedup vs. Number of Cores}
 

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (MiKTeX 2.8) (preloaded format=latex 2009.10.14)  30 APR 2010 12:56
+This is pdfTeX, Version 3.1415926-1.40.10 (MiKTeX 2.8) (preloaded format=latex 2009.10.14)  30 APR 2010 13:04
 entering extended mode
 **writeup.tex
 
@@ -246,23 +246,23 @@ LaTeX Font Info:    ... okay on input line 12.
 
 
 ]
+Underfull \vbox (badness 6758) has occurred while \output is active []
+
 File: portomoniz.jpg Graphic file (type eps)
- <portomoniz.jpg>
+
+<portomoniz.jpg>
 File: graph_grainsize.eps Graphic file (type eps)
  <graph_grainsize.eps>
 File: graph_speedup_vs_particle_size.eps Graphic file (type eps)
-
-<graph_speedup_vs_particle_size.eps>
-Underfull \vbox (badness 6995) has occurred while \output is active []
-
- [2]
+ <graph_speedup_vs_particle_size.eps>
+[2]
 File: graph_best_time_vs_particle_size.eps Graphic file (type eps)
-
-<graph_best_time_vs_particle_size.eps>
+ <graph_best_time_vs_particle_size.eps>
 File: graph_cores.eps Graphic file (type eps)
  <graph_cores.eps>
 File: graph_clusters.eps Graphic file (type eps)
- <graph_clusters.eps>
+
+<graph_clusters.eps>
 LaTeX Font Info:    Try loading font information for OT1+pcr on input line 265.
 
 
@@ -276,10 +276,10 @@ p.aux) )
 Here is how much of TeX's memory you used:
  2388 strings out of 495286
  34758 string characters out of 3179903
- 95451 words of memory out of 3000000
+ 96451 words of memory out of 3000000
  5590 multiletter control sequences out of 15000+200000
  29885 words of font info for 69 fonts, out of 3000000 for 9000
  14 hyphenation exceptions out of 8191
  27i,6n,24p,238b,517s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on writeup.dvi (4 pages, 18432 bytes).
+Output written on writeup.dvi (4 pages, 18788 bytes).
