@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (MiKTeX 2.8) (preloaded format=latex 2009.10.14)  30 APR 2010 08:17
+This is pdfTeX, Version 3.1415926-1.40.10 (MiKTeX 2.8) (preloaded format=latex 2009.10.14)  30 APR 2010 09:19
 entering extended mode
 **writeup.tex
 
@@ -254,16 +254,35 @@ Overfull \hbox (10.0pt too wide) in paragraph at lines 209--210
 [][] 
  []
 
-[2]
+File: graph_speedup_vs_particle_size.eps Graphic file (type eps)
+<graph_speedup_vs_particle_size.eps>
+Overfull \hbox (10.0pt too wide) in paragraph at lines 220--221
+[][] 
+ []
+
+
+Underfull \vbox (badness 3635) has occurred while \output is active []
+
+ [2]
+File: graph_best_time_vs_particle_size.eps Graphic file (type eps)
+
+<graph_best_time_vs_particle_size.eps>
+Overfull \hbox (10.0pt too wide) in paragraph at lines 227--228
+[][] 
+ []
+
+[3
+
+]
 (C:\Users\root\Documents\UPenn\2010__Spring\CIS-534\cis534kmeans\writeup\writeu
 p.aux) ) 
 Here is how much of TeX's memory you used:
- 2346 strings out of 495286
- 34051 string characters out of 3179903
+ 2350 strings out of 495286
+ 34191 string characters out of 3179903
  95451 words of memory out of 3000000
- 5556 multiletter control sequences out of 15000+200000
+ 5558 multiletter control sequences out of 15000+200000
  29669 words of font info for 68 fonts, out of 3000000 for 9000
  14 hyphenation exceptions out of 8191
- 27i,5n,24p,238b,517s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 27i,6n,24p,238b,517s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on writeup.dvi (2 pages, 12780 bytes).
+Output written on writeup.dvi (3 pages, 13748 bytes).
