@@ -302,7 +302,11 @@ It is possible that Intel's scheduler is tuned to better peform on dual-socket q
 on a dual-socket dual-core as the rest of the experiments are run on. Since the scheduler is implemented
 on a dyamic link library, it is possible that future versions of the library will exhibit better performance.
 
-Nevertheless, since
+Nevertheless, since TBB exhibits a reasonbly linear speedup (7.0 on 8 cores), a linear regression fit (not shown),
+optimistically shows a speedup of around 50.0 on 64 cores. Unfortunately, we do not possess dedicated machines
+with such a high number of cores to obtain a realistic result. However, it is predicted that the affects on memory bandwith
+and cache coherence would be detrimental since this is not a read-many-times, write-once type of algorithms, and
+actual speedups will be much lower, unless some novel way is introduced to address these problems.
 
 
 \subsection{Speedup vs. Number of Clusters}
@@ -325,8 +329,7 @@ Nevertheless, since
 \begin{thebibliography}{1}
 
 \bibitem{IEEEhowto:kopka}
-H.~Kopka and P.~W. Daly, \emph{A Guide to {\LaTeX}}, 3rd~ed.
-Harlow, England: Addison-Wesley, 1999.
+H.~Kopka and P.~W. Daly, \emph{A Guide to {\LaTeX}}, 3rd~ed. Harlow, England: Addison-Wesley, 1999.
 
 \end{thebibliography}
 
