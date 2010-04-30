@@ -285,11 +285,31 @@ involves OpenMP code being able to perform more FLOPs per second than TBB code a
 for the increased performance. Such a line would be much more linear since instructions would have
 consume a near constant number of FLOPs per particle.
 
+As a side note, a comparison of runtime vs. particle size also shows a fairly linear speedup, meaning
+that increasing the resolution only approximately increases the runtime of the parallel k-means
+algorithm linearly. The resolution chosen for resolution, 1280x800, or 1,024,000 particles, takes 
+approximately 4 seconds. Between 512,000 particles and 128,000 particles, it is possible to have sub-second
+times. This means that NTSC DVD resolution pictures (720x480) can be processesed by the k-means algorithm
+on four cores almost immediately, making it possibly suitable for use on realtime or interactive systems.
+
 \subsection{Speedup vs. Number of Cores}
+
+A noticable difference present in this experiment is the fact that OpenMP starts to perform worse
+as the number of cores increase. This provides further evidence for the memory throughput theory mentioned
+in the previous experiments. Since this experiment was performed on a dual-socket quad-core, there is an
+extra level of indirection that is present for the CPUs to access the memory bus. As a result, it is
+understandable that a decrease in the total memory throughput would cause the leveling off of speedups.
+However, this does the explain the results using Intel's TBB, which maintains a reasonably linear speedup.
+It is possible that Intel's scheduler is tuned to better peform on dual-socket quad-core and not as well
+on a dual-socket dual-core as the rest of the experiments are run on. Since the scheduler is implemented
+on a dyamic link library, it is possible that future versions of the library will exhibit better performance.
+
+Nevertheless, 
+
 
 \subsection{Speedup vs. Number of Clusters}
 
-\section{Conclusion}
+\section{Conclusion and Future Steps}
 
 % needed in second column of first page if using \pubid
 %\pubidadjcol
