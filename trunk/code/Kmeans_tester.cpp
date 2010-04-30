@@ -46,17 +46,20 @@ int main(int argc, char **argv) {
         assignments[particle_iter] = UCHAR_MAX;
     }
 
-    if(!mode.compare("triangle")) {
+    if (!mode.compare("triangle")) {
         std::cout << "triangle mode\n";
         kmeans_tri(data, centers, particle_count, channels, cluster_count, assignments);
     }
-    else if(!mode.compare("tbb")) {
+    else if (!mode.compare("tbb")) {
         std::cout << "tbb mode\n";
         kmeans_tbb( data, centers, particle_count, channels, cluster_count, assignments, grainsize, thread_count );
     }
-    else {
+    else if (!mode.comepare("serial")) {
         std::cout << "serial mode\n";
         kmeans_serial(data, centers, particle_count, channels, cluster_count, assignments);
+    }
+    else {
+        std::cout << "mode not selected\n";
     }
  
     // release memory
@@ -65,6 +68,7 @@ int main(int argc, char **argv) {
     cvReleaseImage(&hsvImg );
     cvReleaseImage(&img2 );
     cvReleaseImage(&img );
+
     return 0;
 }
 
