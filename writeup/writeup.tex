@@ -2,6 +2,9 @@
 \usepackage{cite, graphicx, subfigure, amsmath} 
 \usepackage{algorithm, algorithmic}
 \usepackage{graphicx}
+\usepackage{mdwlist}
+\usepackage{float}
+\usepackage{url}
 \interdisplaylinepenalty=2500
 
 % *** Do not adjust lengths that control margins, column widths, etc. ***
@@ -128,7 +131,7 @@ outnumbers the number of processors.
 \subsection{k-means++}
 While the runtime of the original algorithm where the initial \textit{k}-clusters are randomly chosen is acceptable
 , it has been shown that the worst case running time
-can be super-polynomial. By using the k-means++ algorithm to choose the initial
+can be super-polynomial \cite{slow}. By using the k-means++ algorithm to choose the initial
 starting clusters, the algorithm is guaranteed a solution that is within a factor of $O(log k)$
 to the optimal k-means solution.
 
@@ -307,8 +310,21 @@ optimistically shows a speedup of around 50.0 on 64 cores. Unfortunately, we do 
 with this number of cores on which to run tests. We attempted to cross-compile our TBB code for the Niagara II SPARC machine we did have access to, however, this was not possible because of the TBB libraries. We can still predict that the effects on memory bandwith
 and cache coherence from a many-core environment would be detrimental to runtime since this is not a read-many-times, write-once type of algorithm. Thus the actual speedup on a 64 core environment will be must less than linear without a novel a novel method to tune the code to address these concerns.
 
-
 \subsection{Speedup vs. Number of Clusters}
+
+Suprisingly, the results for speedup vs. number of clusters are conterintuitive, with low values only
+producing a minimal speedup. This can probably be attributed to the fact that low value of $k$
+result in a generally lower number of iterations of lines 2 - 17 of \textbf{Algorithm 1}, and
+as a result the total work is still dominated by the overhead of parallelism. This means choosing a value
+of $k$ that is too small is detrimental to performance.
+
+The rest of the results indicate that performance scales pretty much
+linearly with the number of clusters. It can reasonably be assumed that the trends is maintained
+with values of $k$ greater than what is shown, since this would imply that there are an abnormally
+large amount of amount of things to segment, which should only happen in rare cases.
+
+\section{Triangle Inequality}
+Stub \cite{triangle}.
 
 \section{Conclusion and Future Steps}
 
@@ -325,30 +341,10 @@ and cache coherence from a many-core environment would be detrimental to runtime
 % references section
 %\bibliographystyle{IEEEtran.bst}
 %\bibliography{IEEEabrv,../bib/paper}
-\begin{thebibliography}{1}
-
-\bibitem{IEEEhowto:kopka}
-H.~Kopka and P.~W. Daly, \emph{A Guide to {\LaTeX}}, 3rd~ed. Harlow, England: Addison-Wesley, 1999.
-
-\end{thebibliography}
-
-% biography section
-% 
-%\begin{biographynophoto}{Chris Jordan}
-%Biography text here.
-%\end{biographynophoto}
-
-% if you will not have a photo
-%\begin{biographynophoto}{Victor Janmey}
-%Biography text here.
-%\end{biographynophoto}
-
-% insert where needed to balance the two columns on the last page
-%\newpage
-
-%\begin{biographynophoto}{Raymond Ko}
-%Biography text here.
-%\end{biographynophoto}
+%\begin{thebibliography}{1}
+%\bibitem{IEEEhowto:kopka}
+%H.~Kopka and P.~W. Daly, \emph{A Guide to {\LaTeX}}, 3rd~ed. Harlow, England: Addison-Wesley, 1999.
+%\end{thebibliography}
 
 % You can push biographies down or up by placing
 % a \vfill before or after them. The appropriate
@@ -361,5 +357,8 @@ H.~Kopka and P.~W. Daly, \emph{A Guide to {\LaTeX}}, 3rd~ed. Harlow, England: Ad
 % Can be used to pull up biographies so that the bottom of the last one
 % is flush with the other column.
 %\enlargethispage{-5in}
+
+\bibliographystyle{plain} % Please do not change the bib-style
+\bibliography{writeup_bib} % Just the *.BIB filename
 
 \end{document}

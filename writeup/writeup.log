@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (MiKTeX 2.8) (preloaded format=latex 2009.10.14)  30 APR 2010 13:50
+This is pdfTeX, Version 3.1415926-1.40.10 (MiKTeX 2.8) (preloaded format=latex 2009.10.14)  30 APR 2010 14:45
 entering extended mode
 **writeup.tex
 
@@ -225,23 +225,30 @@ Package: algorithmic 2009/08/24 v0.1 Document Style `algorithmic'
 \ALC@tlm=\skip53
 \algorithmicindent=\skip54
 )
+("C:\Program Files (x86)\MiKTeX 2.8\tex\latex\mdwtools\mdwlist.sty"
+Package: mdwlist 1996/05/02 1.1 Various list-related things
+)
+("C:\Program Files (x86)\MiKTeX 2.8\tex\latex\ltxmisc\url.sty"
+\Urlmuskip=\muskip11
+Package: url 2006/04/12  ver 3.3  Verb mode for urls, etc.
+)
 (C:\Users\root\Documents\UPenn\2010__Spring\CIS-534\cis534kmeans\writeup\writeu
 p.aux)
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 12.
-LaTeX Font Info:    ... okay on input line 12.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 12.
-LaTeX Font Info:    ... okay on input line 12.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 12.
-LaTeX Font Info:    ... okay on input line 12.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 12.
-LaTeX Font Info:    ... okay on input line 12.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 12.
-LaTeX Font Info:    ... okay on input line 12.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 12.
-LaTeX Font Info:    ... okay on input line 12.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
 
-** ATTENTION: \keywords is deprecated (line 53). Use \IEEEkeywords instead.
-** ATTENTION: \PARstart is deprecated (line 58). Use \IEEEPARstart instead.
+** ATTENTION: \keywords is deprecated (line 56). Use \IEEEkeywords instead.
+** ATTENTION: \PARstart is deprecated (line 61). Use \IEEEPARstart instead.
 [1
 
 
@@ -263,23 +270,28 @@ File: graph_cores.eps Graphic file (type eps)
 File: graph_clusters.eps Graphic file (type eps)
 
 <graph_clusters.eps>
-LaTeX Font Info:    Try loading font information for OT1+pcr on input line 264.
+LaTeX Font Info:    Try loading font information for OT1+pcr on input line 267.
 
 
 ("C:\Program Files (x86)\MiKTeX 2.8\tex\latex\psnfss\ot1pcr.fd"
 File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
-) [3] [4
+) [3]
+Underfull \hbox (badness 2189) in paragraph at lines 308--312
+[]\OT1/ptm/m/n/10 Nevertheless, since TBB ex-hibits a rea-son-ably lin-ear
+ []
 
-]
+
+(C:\Users\root\Documents\UPenn\2010__Spring\CIS-534\cis534kmeans\writeup\writeu
+p.bbl) [4]
 (C:\Users\root\Documents\UPenn\2010__Spring\CIS-534\cis534kmeans\writeup\writeu
 p.aux) ) 
 Here is how much of TeX's memory you used:
- 2388 strings out of 495286
- 34758 string characters out of 3179903
+ 2486 strings out of 495286
+ 36242 string characters out of 3179903
  96451 words of memory out of 3000000
- 5590 multiletter control sequences out of 15000+200000
- 29885 words of font info for 69 fonts, out of 3000000 for 9000
+ 5684 multiletter control sequences out of 15000+200000
+ 27064 words of font info for 60 fonts, out of 3000000 for 9000
  14 hyphenation exceptions out of 8191
- 27i,6n,24p,238b,517s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 27i,6n,24p,316b,517s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on writeup.dvi (4 pages, 21788 bytes).
+Output written on writeup.dvi (4 pages, 23372 bytes).
