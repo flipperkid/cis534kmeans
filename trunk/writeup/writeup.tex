@@ -312,13 +312,13 @@ and cache coherence from a many-core environment would be detrimental to runtime
 
 \subsection{Speedup vs. Number of Clusters}
 
-Suprisingly, the results for speedup vs. number of clusters are conterintuitive, with low values only
-producing a minimal speedup. This can probably be attributed to the fact that low value of $k$
+Suprisingly, the results for speedup vs. number of clusters are counterintuitive, with low cluster values only
+producing a minimal speedup. This can probably be attributed to the fact that lower values of $k$
 result in a generally lower number of iterations of lines 2 - 17 of \textbf{Algorithm 1}, and
 as a result the total work is still dominated by the overhead of parallelism. This means choosing a value
 of $k$ that is too small is detrimental to performance.
 
-The rest of the results indicate that performance scales pretty much
+The rest of the results indicate that performance scales more or less
 linearly with the number of clusters. It can reasonably be assumed that the trends is maintained
 with values of $k$ greater than what is shown, since this would imply that there are an abnormally
 large amount of amount of things to segment, which should only happen in rare cases.
@@ -327,6 +327,8 @@ large amount of amount of things to segment, which should only happen in rare ca
 Stub \cite{triangle}.
 
 \section{Conclusion and Future Steps}
+
+One natural extension to this work is to perform an in-depth analysis of the difference between the TBB and OpenMP code, such as by doing a thorough comparison of the assembly files produced by the TBB and OpenMP versions of the algorithm to see how they are using Intel's SIMD instructions differently. To go even further, the TBB and OpenMP implementations could be hand-tuned to use SSE vectorization, and the performance gains could be measured. Another extension would be to implement the k-means algorithm on a graphics card (for example, with CUDA) and compare its performance to the performances we achieved on the CPU. Some additional experiments would be to use different methods of packing the image data such as cohesive particle or cohesive image channels, to see which works best with the SSE vector instructions, or to use different color spaces or different distance functions on the input image.
 
 % needed in second column of first page if using \pubid
 %\pubidadjcol
