@@ -214,10 +214,27 @@ with the static and dynamic scheduler. Either the grainsize configuration didn't
 static values were prechosen, since varying grain size did not significantly affect grainsize.
 
 \subsection{Speedup vs. Number of Particles}
+
+In this experiment, we scaled the above image to vary the number of particles.
+
+\includegraphics[width=1\linewidth]{graph_speedup_vs_particle_size}
+
+When the speedup is compared to the particle size, a particle size that is
+too small results in a sub-optimal speedup. However, as the particle size
+gets larger to more reasonable values, the speedup remains fairly linear for
+TBB and and a decrease to the maximum theoretical linear speedup for OpenMP.
+
+\includegraphics[width=1\linewidth]{graph_best_time_vs_particle_size}
+
 \subsection{Speedup vs. Number of Cores}
 \subsection{Speedup vs. Number of Clusters}
 
 \section{Discussion of Results}
+
+\subsection{Speedup vs. Grain Size}
+\subsection{Speedup vs. Number of Particles}
+\subsection{Speedup vs. Number of Cores}
+\subsection{Speedup vs. Number of Clusters}
 
 \section{Conclusion}
 
