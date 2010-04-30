@@ -14,7 +14,7 @@
 
 \begin{document}
 % paper title
-\title{Parallelizing k-means for Image Segmentation}
+\title{Parallelizing K-means For Image Segmentation}
 
 
 % author names and IEEE memberships
@@ -50,20 +50,21 @@ and Raymond W. Ko}% <-this % stops a space
 \maketitle
 
 \begin{abstract}
-Abstract goes where? Abstract goes here!
+The k-means algorithm is a simple algorithm for grouping a number of particles into a fixed number of clusters. Due to its simple, iterative structure, it is able to be effectively parallelized for execution on multicore CPUs. One of the main applications of the algorithm is in image segmentation. We implemented a parallel version of the k-means algorithm for image segmentation using both the OpenMP library and Intel's Threading Building Blocks (TBB) library and compared the execution of the parallel code to a serial version. The results were superlinear speedup for up to 4 cores under the OpenMP implementation and linear speedup for up to 8 cores under the TBB implementation. An version of the k-means algorithm that took advantage of the triangle inequality was also implemented in TBB, obtaining faster absolute speedups but slower speedups relative to the serial version of the same code.
+
 \end{abstract}
 
 \begin{keywords}
-k-means, k-means++, parallel programming, triangle inequality
+k-means, parallel programming
 \end{keywords}
 
 \section{Introduction}
 \PARstart{T}{he} k-means algorithm performs a simple grouping of particles into a fixed number of clusters.
-It has an vast amount of uses in fields such as
+It has a vast amount of uses in fields such as
 machine learning, computer vision, and network analysis.
 
 In the case of machine learning, it is useful in unsupervised learning methods, 
-dividing data for more specific classifiers, and the selection of of examples for k-nearest neighbors.
+in dividing data into more specific classifiers, and in the selection of of examples for k-nearest neighbors.
 
 For computer vision, one frequent task is to segment images using the difference in pixel intensity as a distance
 metric. One can then use the k-means algorithm to estimate object boundaries, or use it as a cue for other algorithms
@@ -113,18 +114,18 @@ of the particles in that cluster.
 An initial cursory glance at the algorithm indicates that there are parts that are
 easy to parallelize.
 
-The initial steps for choosing $k$ can be done in any fashion, and since they are not
-dependent on each other, can simply be randomly chosen in parallel.
+The initial step in which the $k$ centers are chosen can be done in any fashion, and since the centers are not
+dependent on each other, they can simply be randomly chosen in parallel.
 
 The second step, the assignment step, is the time dominating factor in the calculation since
 it is $O(kn)$ due to the fact that for every particle, each of the $k$-clusters must be considered.
-Nevertheless, since the inner for loop and assignment is independent of every other iteration,
-it is an example of ``embarrassingly'' parallel programming, and as such using a \emph{parallel for}
+Nevertheless, since the inner for loop and cluster assignment are independent of every other iteration,
+this is an example of ``embarrassingly'' parallel programming, and as such using a \emph{parallel for}
 loop construct is enough to evenly distribute the work between $n$ processors.
 
 For the third step, the update step, a \emph{parallel reduce} was used to sum up the values of the particles
 before performing a division to determine the mean. While it is also possible to use a \emph{parallel for} construct
-over the outer for loop, it does not scale well if $k$ is smaller than the number of processors.
+over the outer for loop, this does not scale well if $k$ is smaller than the number of processors.
 A \emph{parallel reduce} would almost always utilize the processors fully since the number of particles usually
 outnumbers the number of processors.
 
@@ -162,7 +163,7 @@ array of shortest distances to a known center, can be implemented as a parallel 
 \section{Implementation}
 
 In order to implement parallelization in the k-means program, we chose
-Intel's Threading Building Block (TBB) framework since all the necessary parallel constructs
+Intel's Threading Building Blocks (TBB) framework since all the necessary parallel constructs
 desired are present. TBB removes the need for the programmer to be concerned with
 low-level thread management since this is automatically managed by a scheduler.
 The only variable in the TBB implementation that we wish to tune is the grain size for the \emph{parallel\_for}
@@ -179,8 +180,7 @@ get without using a specialized library.
 
 In order to determine the effectiveness of parallelization, several experiments regarding
 grain size, particle size, core size, and cluster size were run. Determining the optimal grain size
-is important since an improper grain size may create unnecessary tasks (if too small) or be unable
-to fully utilize the total number of cores (if too large). Particle size is also important since
+is important since an improper grain size may create unnecessary tasks (if too small) or cause some cores to be unutilized (if too large). Particle size is also important since
 it has implications towards what image resolutions today's technology can process at a reasonable speed.
 If a certain response time is desired of a machine vision program, it might become necessary
 to down-sample images received. Another aspect of interest regarding this algorithm is the
@@ -211,14 +211,14 @@ of the town of Porto Moniz with a resolution of $1280 \times 800$ pixels. This e
 
 \includegraphics[width=.90\linewidth]{graph_grainsize}
 
-As expected, TBB produces a somewhat ideal speedup until the grain size became too large to be evenly
+As expected, TBB produces a nearly ideal speedup until the grain size became too large to be evenly
 distributed over the number of cores. Surprisingly, OpenMP exhibits super-linear speedup
-with the static and dynamic scheduler. Either the grainsize configuration did not work, or
-static values were pre-chosen, since varying grain size did not significantly affect grainsize.
+with the static and dynamic scheduler. Either the grainsize configuration did not work as intented or
+static values were pre-chosen by the library, since varying grain size did not significantly affect speedup.
 
 \subsection{Speedup vs. Number of Particles}
 
-In this experiment, we scaled the above image to vary the number of particles.
+In this experiment, we scaled the Porto Moniz image to vary the number of particles (pixels).
 
 \includegraphics[width=.90\linewidth]{graph_speedup_vs_particle_size}
 
@@ -247,7 +247,7 @@ no further improvement.
 \includegraphics[width=.90\linewidth]{graph_clusters}
 
 For TBB, speedup is fairly linear on four cores when compared to the serial version, except
-for when values of $k$ are extremely small. Like the graphs, before OpenMP exhibits better
+for when values of $k$ are extremely small. As in the other experiments, OpenMP exhibits better
 peformance than TBB in almost all cases.
 
 \section{Discussion of Results}
@@ -371,6 +371,7 @@ of the speedup is less than the standard algorithm.
 
 \section{Conclusion and Future Steps}
 
+In conclusion, the k-means algorithm parallelizes very well, obtaining superlinear speedups on 4 cores with an OpenMP implementation. It also scales well up to 8 cores, with the TBB implementation obtaining close to linear speedups when scaled. Further absolute speedups can be obtained by implementing an optimized algorithm based on the triangle inequality, although the relative speedup between the serial and parallel version decreases in this case.
 One natural extension to this work is to perform an in-depth analysis of the difference between the TBB and OpenMP code, such as by doing a thorough comparison of the assembly files produced by the TBB and OpenMP versions of the algorithm to see how they are using Intel's SIMD instructions differently. To go even further, the TBB and OpenMP implementations could be hand-tuned to use SSE vectorization, and the performance gains could be measured. Another extension would be to implement the k-means algorithm on a graphics card (for example, with CUDA) and compare its performance to the performances we achieved on the CPU. Some additional experiments would be to use different methods of packing the image data such as cohesive particle or cohesive image channels, to see which works best with the SSE vector instructions, or to use different color spaces or different distance functions on the input image.
 
 \section{Appendix A - Source Code}
