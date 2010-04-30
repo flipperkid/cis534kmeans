@@ -15,6 +15,7 @@ int kmeans_tbb(uchar *particle_data, float *centers, int particle_count, int dim
 
     // iterate until clusters converge
     start_timer( 3 );
+
     int iterations = 0;
     bool assignment_change = true;
     while(assignment_change) {
@@ -39,7 +40,9 @@ int kmeans_tbb(uchar *particle_data, float *centers, int particle_count, int dim
         stop_timer( 2 );
         iterations++;
     }
+
     stop_timer( 3 );
+
     printf("Step1: %f seconds, %d particles, %d clusters, %d dimensions, %d iterations, %d threads, %d grainsize\n", 
             get_time_elapsed( 1 ), particle_count, cluster_count, dimensions, iterations, thread_count, grainSize);
     printf("Step2: %f seconds, %d particles, %d clusters, %d dimensions, %d iterations, %d threads, %d grainsize\n", 
