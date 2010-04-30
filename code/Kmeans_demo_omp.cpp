@@ -39,7 +39,8 @@ int main(int argc, char **argv) {
     }
     //kmeans_serial(data, centers, particle_count, channels, cluster_count, assignments);
     int grainSize = 1024;
-    kmeans_omp(data, centers, particle_count, channels, cluster_count, assignments, grainSize);
+    int thread_count = 4;
+    kmeans_omp(data, centers, particle_count, channels, cluster_count, assignments, grainSize, thread_count);
 
     IplImage *outImg = cvCreateImage( cvGetSize(img), 8, 3 );
     output_assignments(outImg, assignments, centers, cluster_count, particle_count, channels);
