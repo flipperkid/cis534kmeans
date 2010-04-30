@@ -54,7 +54,7 @@ int main(int argc, char **argv) {
         std::cout << "tbb mode\n";
         kmeans_tbb( data, centers, particle_count, channels, cluster_count, assignments, grainsize, thread_count );
     }
-    else if (!mode.comepare("serial")) {
+    else if (!mode.compare("serial")) {
         std::cout << "serial mode\n";
         kmeans_serial(data, centers, particle_count, channels, cluster_count, assignments);
     }
