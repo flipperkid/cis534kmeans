@@ -250,40 +250,38 @@ peformance than TBB in almost all cases.
 \section{Discussion of Results}
 
 \subsection{Speedup vs. Grain Size}
-In the case of OpenMP, the speedup is irrelevant of grain size until it becomes so large
-that total particles divided by grain size is larger than the number of cores present. On
-the hand, with OpenMP, superlinear speedup is achieved, which is surprising.
-In order to explain this, several theories were created. Initially it is thought that
+In the case of OpenMP, the speedup is independent of grain size until the grain size becomes so large
+that the total number of particles divided by the grain size is larger than the number of cores present. It is surprising to note that with OpenMP  superlinear speedup is achieved.
+We have several theories explaining the superlinear speedup. Initially it was thought that
 loop unrolling might be the cause; however, the linear version also had the loop unrolling
-compilation flag, so this possibility is eliminated. Upon brief inspection of the assembly
+compilation flag, so this possibility was eliminated. Upon brief inspection of the assembly
 code in the GNU debugger (gdb), it was revealed that gcc made significant use of the
-Intel Single Instruction Multiple Data (SIMD) in a fashion that is better than TBB.
-Unfortunately, there was not enough time to study the disassembly of the libraries in depth.
-Lastly, another hypothesis was that OpenMP better utlized the memory bus than TBB, either
-producing a sequence of instructions that read with more throughput or produce a better
-read ahead effect. Cache size is believed to be so strongly involved since our image
+Intel Single Instruction Multiple Data (SIMD) instructions in a fashion that is more efficient than TBB.
+A more detailed comparison of the assembly instructions between the two implementations would be very informative, but that is beyond the scope of this paper.
+Finally, another hypothesis was that OpenMP better utlized the memory bus than TBB, either
+by producing a sequence of instructions that read with more throughput or by producing a better
+read-ahead effect. Cache size is believed to be strongly involved since our image
 produces a \texttt{double} array of size $1024000 \textrm{ particles}
-\times 8 \textrm{ bytes} \times 3 \textrm{ channels} = 23.4375$ MB, which should definitely
-be larger than the L2 cache.
+\times 8 \textrm{ bytes} \times 3 \textrm{ channels} = 23.4375$ MB, which is far larger than the L2 cache on the machines we tested.
 
 \subsection{Speedup vs. Number of Particles}
 
-Intel's TBB exhibit a stable almost unvarying level speedup after particle size is large
-enough to ensure each of the cores have enough work distributed to them. The same is true
+Intel's TBB exhibit a stable, almost unvarying level of speedup after the particle size is large
+enough to ensure that each of the cores has enough work distributed to it. The same is true
 for OpenMP, where if the work is too small, speedup gains are not as efficient as they
 can be. This seemingly reflects one of the basic rules of thumb in parallel programming:
-if your data set is too small, it is better to fallback to the serial version instead of
-creating the extra overhead of parallelization and gaining no benefit from it. Like
+if your data set is too small, it is better to fall back to the serial version instead of
+creating the extra overhead of parallelization without gaining any benefit from it. Like
 the above results for speedup vs. grain size, the OpenMP seems to get astonishing
 superlinear speedups. Since this part of the experiment involves manipulating large sets
-of data, the theory of better memory throughput or readahead effect seems to be supported
+of data, the theory of better memory throughput or read-ahead effects seems to be supported
 since read-ahead becomes much more apparent when the number of particles is small (resulting
-in all of the particles to be read into the L2 cache). As particle size increases, the affects
-of read-ahead seems to level off, but memory throughput is still higher than TBB. The
-slope in performance with increasing particle size seems still disqualify any theory that
-involves OpenMP code being able to perform more FLOPs per second than TBB code as the explanation
-for the increased performance. Such a line would be much more linear since instructions would have
-consume a near constant number of FLOPs per particle.
+in all of the particles being read into the L2 cache). As particle size increases, the effects
+of read-ahead seem to level off, but memory throughput is still higher than with TBB. The
+slope in performance as particle size increases seems to suggest that the theory that
+the OpenMP code performs more FLOPs per second than the TBB code is not the right explanation
+for the increased performance. Such a plot would be much more linear since the instructions would
+consume a nearly constant number of FLOPs per particle.
 
 As a side note, a comparison of runtime vs. particle size also shows a fairly linear speedup, meaning
 that increasing the resolution only approximately increases the runtime of the parallel k-means
@@ -304,7 +302,7 @@ It is possible that Intel's scheduler is tuned to better peform on dual-socket q
 on a dual-socket dual-core as the rest of the experiments are run on. Since the scheduler is implemented
 on a dyamic link library, it is possible that future versions of the library will exhibit better performance.
 
-Nevertheless, 
+Nevertheless, since
 
 
 \subsection{Speedup vs. Number of Clusters}
